@@ -14,7 +14,7 @@ public class UserRequest {
     @Getter
     public static class LoginInDTO {
 
-        @Pattern(regexp = "^[a-zA-Z0-9]{2,20}$", message = "영문/숫자 2~20자 이내로 작성해주세요")
+        @Pattern(regexp = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$", message = "이메일 형식으로 작성해주세요")
         @NotEmpty
         private String email;
 
@@ -34,7 +34,7 @@ public class UserRequest {
         @Size(min = 4, max = 20)
         private String password;
 
-        @Pattern(regexp = "^[a-zA-Z0-9]{2,20}$", message = "영문/숫자 2~20자 이내로 작성해주세요")
+        @Pattern(regexp = "^[a-zA-Z가-힣]{1,20}$", message = "한글/영문 1~20자 이내로 작성해주세요")
         @NotEmpty
         private String username;
 
