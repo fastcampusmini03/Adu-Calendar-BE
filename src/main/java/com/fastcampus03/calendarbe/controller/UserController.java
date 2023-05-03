@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
@@ -26,21 +25,18 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Valid  UserRequest.LoginInDTO loginInDTO, HttpServletRequest request) {
+    public ResponseEntity<?> login(@RequestBody UserRequest.LoginInDTO loginInDTO, HttpServletRequest request) {
         Map<String, Object> responseData = userService.로그인(loginInDTO, request);
         ResponseDTO<?> responseDTO = new ResponseDTO<>(responseData.get("loginUser"));
         return ResponseEntity.ok().header(MyJwtProvider.HEADER, (String) responseData.get("jwt")).body(responseDTO);
     }
-
 
     @PostMapping("/join")
     public ResponseEntity<?> join (
             @RequestBody @Valid UserRequest.JoinInDTO joinInDTO,
             Errors errors,
             HttpServletRequest request) {
-
-        UserRequest.LoginInDTO loginDTO = userService.회원가입(joinInDTO);
-        Map<String, Object> responseData = userService.로그인(loginDTO, request);
+        Map<String, Object> responseData = userService.회원가입(joinInDTO, request);
         ResponseDTO<?> responseDTO = new ResponseDTO<>(HttpStatus.CREATED, "성공", responseData.get("loginUser"));
         return ResponseEntity.created(null).header(MyJwtProvider.HEADER, (String) responseData.get("jwt")).body(responseDTO);
     }

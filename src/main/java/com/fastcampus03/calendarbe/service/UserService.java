@@ -35,24 +35,16 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    @Transactional
-    public Map<String, Object> 로그인(UserRequest.LoginInDTO loginInDTO, HttpServletRequest request) {
+    public Map<String, Object> 인증(String email, String password){
         try {
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
-                    = new UsernamePasswordAuthenticationToken(loginInDTO.getEmail(), loginInDTO.getPassword());
+                    = new UsernamePasswordAuthenticationToken(email,password);
             Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
             MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
             User userPS = myUserDetails.getUser();
             String jwt = MyJwtProvider.create(userPS);
 
             userPS.setLoggedInAt(LocalDateTime.now());
-            LoginLog loginLog = LoginLog.builder()
-                    .userId(userPS.getId())
-                    .userAgent(request.getHeader("User-Agent"))
-                    .clientIP(request.getRemoteAddr())
-                    .build();
-            loginLogRepository.save(loginLog);
-
             Map<String, Object> responseData = new HashMap<>();
             responseData.put("jwt", jwt);
             responseData.put("loginUser", userPS);
@@ -63,8 +55,24 @@ public class UserService {
         }
     }
 
+    public void 로그기록(User userPS, HttpServletRequest request){
+        LoginLog loginLog = LoginLog.builder()
+                .userId(userPS.getId())
+                .userAgent(request.getHeader("User-Agent"))
+                .clientIP(request.getRemoteAddr())
+                .build();
+        loginLogRepository.save(loginLog);
+    }
+
     @Transactional
-    public UserRequest.LoginInDTO 회원가입(UserRequest.JoinInDTO joinInDTO) {
+    public Map<String, Object> 로그인(UserRequest.LoginInDTO loginInDTO, HttpServletRequest request) {
+        Map<String, Object> responseData = 인증(loginInDTO.getEmail(), loginInDTO.getPassword());
+        로그기록((User) responseData.get("loginUser"), request);
+        return responseData;
+    }
+
+    @Transactional
+    public Map<String, Object> 회원가입(UserRequest.JoinInDTO joinInDTO, HttpServletRequest request) {
         Optional<User> userOP = userRepository.findByEmail(joinInDTO.getEmail());
         if(userOP.isPresent()){
             // 이 부분이 try catch 안에 있으면 Exception400에게 제어권을 뺏긴다.
@@ -75,7 +83,9 @@ public class UserService {
         joinInDTO.setPassword(encPassword);
         try {
             User userPS = userRepository.save(joinInDTO.toEntity());
-            return joinInDTO.toLoginInDTO(rawPassword);
+            Map<String, Object> joinResponse = 인증(joinInDTO.getEmail(), rawPassword);
+            로그기록(userPS, request);
+            return joinResponse;
         } catch (RuntimeException e) {
             throw new Exception500("회원 가입에 실패하였습니다." + e.getMessage());
         }
