@@ -37,6 +37,11 @@ public class User {
 
     private LocalDateTime loggedInAt;
 
+    public void updateInfo(String password, String username) {
+        this.password = password;
+        this.username = username;
+    }
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();

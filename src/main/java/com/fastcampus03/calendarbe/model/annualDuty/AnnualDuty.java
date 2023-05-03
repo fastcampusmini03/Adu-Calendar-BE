@@ -25,7 +25,7 @@ public class AnnualDuty {
     private String type;
 
     private LocalDateTime start;
-    private LocalDateTime end;
+    private LocalDateTime ends;
 
 
     @Column(nullable = false)
