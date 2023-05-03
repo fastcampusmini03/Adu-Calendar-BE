@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Setter // DTO 만들면 삭제해야됨
@@ -18,15 +19,23 @@ public class AnnualDuty {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 5)
+    private String calendarId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    private String content;
-    private String type;
+    @Column(length = 100)
+    private String title;
 
-    private LocalDateTime start;
-    private LocalDateTime ends;
+    @Column(nullable = false)
+    private LocalDateTime startTime;
 
+    @Column(nullable = false)
+    private LocalDateTime endTime;
+
+    @Column(nullable = false)
+    private Boolean type; // false: 당직, true: 연차
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
