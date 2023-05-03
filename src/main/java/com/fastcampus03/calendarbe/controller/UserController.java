@@ -5,7 +5,9 @@ import com.fastcampus03.calendarbe.dto.ResponseDTO;
 import com.fastcampus03.calendarbe.dto.user.UserRequest;
 import com.fastcampus03.calendarbe.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,5 +27,18 @@ public class UserController {
         Map<String, Object> responseData = userService.로그인(loginInDTO, request);
         ResponseDTO<?> responseDTO = new ResponseDTO<>(responseData.get("loginUser"));
         return ResponseEntity.ok().header(MyJwtProvider.HEADER, (String) responseData.get("jwt")).body(responseDTO);
+    }
+
+
+    @PostMapping("/join")
+    public ResponseEntity<?> join (
+            @RequestBody @Valid UserRequest.JoinInDTO joinInDTO,
+            Errors errors,
+            HttpServletRequest request) {
+
+        UserRequest.LoginInDTO loginDTO = userService.회원가입(joinInDTO);
+        Map<String, Object> responseData = userService.로그인(loginDTO, request);
+        ResponseDTO<?> responseDTO = new ResponseDTO<>(HttpStatus.CREATED, "성공", responseData.get("loginUser"));
+        return ResponseEntity.created(null).header(MyJwtProvider.HEADER, (String) responseData.get("jwt")).body(responseDTO);
     }
 }
