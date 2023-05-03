@@ -82,8 +82,8 @@ public class MySecurityConfig {
         // 11. 인증, 권한 필터 설정
         http.authorizeRequests(
                 authorize -> authorize.antMatchers("/s/**").authenticated()
-                        .antMatchers("/manager/**")
-                        .access("hasRole('ADMIN') or hasRole('MANAGER')")
+                        .antMatchers("/user/**")
+                        .access("hasRole('USER')")
                         .antMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().permitAll()
         );

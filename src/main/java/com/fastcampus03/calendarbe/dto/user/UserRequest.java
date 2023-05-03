@@ -59,7 +59,7 @@ public class UserRequest {
 
     @Getter
     @Setter
-    public class UpdateInDTO {
+    public static class UpdateInDTO {
 
         @NotEmpty
         @Size(min = 4, max = 20)
