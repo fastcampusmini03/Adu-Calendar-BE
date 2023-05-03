@@ -1,6 +1,5 @@
-package com.fastcampus03.calendarbe.model.log.login;
+package com.fastcampus03.calendarbe.model.annualDuty;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,23 +7,25 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
 @Setter // DTO 만들면 삭제해야됨
 @Getter
-@Table(name = "login_log_tb")
+@Table(name = "annual_duty_accepted")
+@NoArgsConstructor
 @Entity
-public class LoginLog {
-
+public class AnnualDutyAccepted {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long userId;
-    private String userAgent;
-    private String clientIP;
+
+    @Column(name = "is_shown", nullable = false)
+    private Boolean isShown; // 0: 안보여줬다, 1: 보여줬다.
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private AnnualDuty annualDuty;
+
     @Column(nullable = false)
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
 
     @PrePersist
     protected void onCreate() {
@@ -34,14 +35,5 @@ public class LoginLog {
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
-    }
-
-    @Builder
-    public LoginLog(Long id, Long userId, String userAgent, String clientIP, LocalDateTime createdAt) {
-        this.id = id;
-        this.userId = userId;
-        this.userAgent = userAgent;
-        this.clientIP = clientIP;
-        this.createdAt = createdAt;
     }
 }
