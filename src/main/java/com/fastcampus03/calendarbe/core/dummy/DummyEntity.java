@@ -12,10 +12,8 @@ public class DummyEntity {
         return User.builder()
                 .username(username)
                 .password(passwordEncoder.encode("1234"))
-                .fullName(fullName)
                 .email(username+"@nate.com")
                 .role("USER")
-                .status(true)
                 .build();
     }
 
@@ -25,10 +23,8 @@ public class DummyEntity {
                 .id(id)
                 .username(username)
                 .password(passwordEncoder.encode("1234"))
-                .fullName(fullName)
                 .email(username+"@nate.com")
                 .role("USER")
-                .status(true)
                 .createdAt(LocalDateTime.now())
                 .build();
     }

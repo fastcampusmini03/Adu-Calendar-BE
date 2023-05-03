@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Table(name = "login_log_tb")
 @Entity
 public class LoginLog {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,6 +23,7 @@ public class LoginLog {
     private String clientIP;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
 
     @PrePersist
     protected void onCreate() {
@@ -32,7 +34,6 @@ public class LoginLog {
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
-
 
     @Builder
     public LoginLog(Long id, Long userId, String userAgent, String clientIP, LocalDateTime createdAt) {
