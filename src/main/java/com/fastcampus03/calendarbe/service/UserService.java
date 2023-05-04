@@ -92,7 +92,7 @@ public class UserService {
     }
 
     @Transactional
-    public ResponseDTO<?> 회원정보수정(UserRequest.UpdateInDTO updateInDTO, @AuthenticationPrincipal MyUserDetails myUserDetails) {
+    public ResponseDTO<?> 회원정보수정(UserRequest.UpdateInDTO updateInDTO, MyUserDetails myUserDetails) {
         // 현재 인증된 사용자의 정보를 가져옵니다.
         User user = myUserDetails.getUser();
 
