@@ -112,11 +112,6 @@ public class UserService {
         User userPS = userRepository.findById(user.getId()).orElseThrow(
                 () -> new Exception401("존재하지 않는 회원입니다.")
         );
-
-        // 현재 인증된 사용자가 수정하려는 사용자의 ID와 같은지 확인합니다.
-        if (!user.getId().equals(userPS.getId())) {
-            throw new Exception401("인증되지 않았습니다.");
-        }
         return new ResponseDTO<>(userPS);
     }
 }
