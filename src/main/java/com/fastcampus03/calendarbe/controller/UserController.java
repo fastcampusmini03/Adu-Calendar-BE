@@ -41,23 +41,21 @@ public class UserController {
         return ResponseEntity.created(null).header(MyJwtProvider.HEADER, (String) responseData.get("jwt")).body(responseDTO);
     }
 
-    @GetMapping("/s/user/{id}")
+    @GetMapping("/s/user")
     public ResponseEntity<?> userInfo(
-            @PathVariable("id") Long id,
             @AuthenticationPrincipal MyUserDetails myUserDetails
     ) {
-        ResponseDTO<?> responseDTO = userService.회원정보보기(id, myUserDetails);
+        ResponseDTO<?> responseDTO = userService.회원정보보기(myUserDetails);
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @PostMapping("/s/user/{id}")
+    @PostMapping("/s/user")
     public ResponseEntity<?> update(
-            @PathVariable("id") Long id,
             @RequestBody @Valid UserRequest.UpdateInDTO updateInDTO,
             Errors errors,
             @AuthenticationPrincipal MyUserDetails myUserDetails
     ) {
-        ResponseDTO<?> responseDTO = userService.회원정보수정(id, updateInDTO, myUserDetails);
+        ResponseDTO<?> responseDTO = userService.회원정보수정(updateInDTO, myUserDetails);
         return ResponseEntity.ok().body(responseDTO);
     }
 }
