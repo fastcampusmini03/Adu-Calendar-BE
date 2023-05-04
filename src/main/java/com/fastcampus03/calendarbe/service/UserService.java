@@ -92,31 +92,26 @@ public class UserService {
     }
 
     @Transactional
-    public ResponseDTO<?> 회원정보수정(Long id, UserRequest.UpdateInDTO updateInDTO, @AuthenticationPrincipal MyUserDetails myUserDetails) {
-        User userPS = userRepository.findById(id).orElseThrow(
-                () -> new Exception401("존재하지 않는 회원입니다.")
-        );
-
+    public ResponseDTO<?> 회원정보수정(UserRequest.UpdateInDTO updateInDTO, @AuthenticationPrincipal MyUserDetails myUserDetails) {
         // 현재 인증된 사용자의 정보를 가져옵니다.
         User user = myUserDetails.getUser();
 
-        // 현재 인증된 사용자가 수정하려는 사용자의 ID와 같은지 확인합니다.
-        if (!user.getId().equals(userPS.getId())) {
-            throw new Exception401("인증되지 않았습니다.");
-        }
+        User userPS = userRepository.findById(user.getId()).orElseThrow(
+                () -> new Exception401("존재하지 않는 회원입니다.")
+        );
 
         // 수정하려는 사용자의 정보를 업데이트합니다.
         userPS.updateInfo(passwordEncoder.encode(updateInDTO.getPassword()), updateInDTO.getUsername());
         return new ResponseDTO<>(userPS);
     }
 
-    public ResponseDTO<?> 회원정보보기(Long id, MyUserDetails myUserDetails) {
-        User userPS = userRepository.findById(id).orElseThrow(
-                () -> new Exception401("존재하지 않는 회원입니다.")
-        );
-
+    public ResponseDTO<?> 회원정보보기(MyUserDetails myUserDetails) {
         // 현재 인증된 사용자의 정보를 가져옵니다.
         User user = myUserDetails.getUser();
+
+        User userPS = userRepository.findById(user.getId()).orElseThrow(
+                () -> new Exception401("존재하지 않는 회원입니다.")
+        );
 
         // 현재 인증된 사용자가 수정하려는 사용자의 ID와 같은지 확인합니다.
         if (!user.getId().equals(userPS.getId())) {
