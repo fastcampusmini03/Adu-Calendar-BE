@@ -48,13 +48,6 @@ public class UserRequest {
                     .role("USER")
                     .build();
         }
-
-        public UserRequest.LoginInDTO toLoginInDTO(String pw) {
-            return UserRequest.LoginInDTO.builder()
-                    .email(email)
-                    .password(pw)
-                    .build();
-        }
     }
 
     @Getter
