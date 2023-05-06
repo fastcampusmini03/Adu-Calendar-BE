@@ -1,18 +1,18 @@
 package com.fastcampus03.calendarbe.model.annualDuty;
 
 import com.fastcampus03.calendarbe.model.user.User;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-@Setter // DTO 만들면 삭제해야됨
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Setter
 @Table(name = "annual_duty_tb")
-@NoArgsConstructor
 @Entity
 public class AnnualDuty {
     @Id
@@ -20,12 +20,13 @@ public class AnnualDuty {
     private Long id;
 
     @Column(nullable = false, length = 5)
-    private String calendarId;
+    private String status; // 승인중 / 승인
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @Column(nullable = false)
     private User user;
 
-    @Column(length = 100)
+    @Column(nullable = false, length = 100)
     private String title;
 
     @Column(nullable = false)
