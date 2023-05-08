@@ -1,5 +1,6 @@
 package com.fastcampus03.calendarbe.model.annualDuty;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
@@ -23,6 +24,7 @@ public class AnnualDutyChecked {
     @Column(nullable = false)
     private String msg;
 
+    @JsonIgnoreProperties("user")
     @OneToOne(fetch = FetchType.LAZY)
     private AnnualDuty annualDuty;
 
