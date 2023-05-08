@@ -21,7 +21,7 @@ public class UpdateRequestLog {
     private Long id;
 
     @JsonIgnoreProperties("user")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private AnnualDuty annualDuty;
 
     @Column(nullable = false, length = 100)

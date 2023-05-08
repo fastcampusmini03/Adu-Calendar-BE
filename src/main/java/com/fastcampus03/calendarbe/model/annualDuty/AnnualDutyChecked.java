@@ -1,5 +1,6 @@
 package com.fastcampus03.calendarbe.model.annualDuty;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
@@ -24,13 +25,17 @@ public class AnnualDutyChecked {
     @Column(nullable = false)
     private String msg;
 
-    @JsonIgnoreProperties("user")
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     private AnnualDuty annualDuty;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    public void afterUserCheck() {
+        this.isShown = true;
+    }
 
     @PrePersist
     protected void onCreate() {

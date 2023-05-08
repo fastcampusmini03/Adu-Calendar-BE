@@ -98,12 +98,4 @@ public class AnnualDutyRequest {
 
         }
 
-        @Setter
-        @Getter
-        public static class DeleteInDTO{
-
-            @NotEmpty
-            private Long deleteId;
-
-        }
 }
