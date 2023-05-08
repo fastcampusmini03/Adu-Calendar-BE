@@ -1,30 +1,25 @@
-package com.fastcampus03.calendarbe.model.annualDuty;
+package com.fastcampus03.calendarbe.model.log.annualDuty;
 
+import com.fastcampus03.calendarbe.model.annualDuty.AnnualDuty;
 import com.fastcampus03.calendarbe.model.user.User;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter
-@Table(name = "annual_duty_tb")
+@Table(name = "updated_annual_duty_tb")
 @Entity
-public class AnnualDuty {
+public class UpdatedAnnualDuty {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 5)
-    private String status; // 승인중 / 승인 / 거절
-
     @ManyToOne(fetch = FetchType.LAZY)
     @Column(nullable = false)
-    private User user;
+    private AnnualDuty annualDuty;
 
     @Column(nullable = false, length = 100)
     private String title;
@@ -36,13 +31,11 @@ public class AnnualDuty {
     private LocalDateTime endTime;
 
     @Column(nullable = false)
-    private Boolean type; // false: 당직, true: 연차
+    private Boolean status; // true : 처리 후, false : 처리 전
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
-    private Integer updateStatus; // 0: default, 1: 업데이트 요청, 2: 삭제 요청
 
     @PrePersist
     protected void onCreate() {
