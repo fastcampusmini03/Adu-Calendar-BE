@@ -10,10 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -25,31 +23,34 @@ public class AnnualDutyController {
     private final AnnualDutyService annualDutyService;
 
     @PostMapping("/s/user/annualDuty/save")
-    public ResponseEntity<?> save(@RequestBody @Valid AnnualDutyRequest.SaveInDTO saveInDTO){
-
-        AnnualDuty annualDuty = annualDutyService.일정등록(saveInDTO);
-        ResponseDTO<?> responseDTO = new ResponseDTO<>(annualDuty); // 따로 responseDTO에 담을지
+    public ResponseEntity<?> save(
+            @RequestBody @Valid AnnualDutyRequest.SaveInDTO saveInDTO,
+            Errors errors
+    ){
+        ResponseDTO<?> responseDTO = annualDutyService.일정등록(saveInDTO);
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @PostMapping("/s/user/annualDuty/update")
-    public ResponseEntity< ? > updateAnnualDuty(
-            @RequestBody AnnualDutyRequest.UpdateInDTO updateInDTO,
+    @PostMapping("/s/user/annualDuty/update/{id}")
+    public ResponseEntity<?> updateAnnualDuty(
+            @PathVariable Long id,
+            @RequestBody @Valid AnnualDutyRequest.UpdateInDTO updateInDTO,
+            Errors errors,
             @AuthenticationPrincipal MyUserDetails myUserDetails) {
 
-        UpdateRequestLog updateRequestLog = annualDutyService.일정수정(updateInDTO, myUserDetails);
-        ResponseDTO<?> responseDTO = new ResponseDTO<>(updateRequestLog);
+        ResponseDTO<?> responseDTO = annualDutyService.일정수정(id, updateInDTO, myUserDetails);
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @PostMapping("/s/user/annualDuty/delete")
+    @PostMapping("/s/user/annualDuty/delete/{id}")
     public ResponseEntity< ? > deleteAnnualDuty(
-            @RequestBody AnnualDutyRequest.DeleteInDTO deleteInDTO,
+            @PathVariable Long id,
             @AuthenticationPrincipal MyUserDetails myUserDetails) {
 
-        AnnualDuty deleteAnnualDuty = annualDutyService.일정삭제(deleteInDTO, myUserDetails);
-        ResponseDTO<?> responseDTO = new ResponseDTO<>(deleteAnnualDuty);
+        ResponseDTO<?> responseDTO = annualDutyService.일정삭제(id, myUserDetails);
         return ResponseEntity.ok().body(responseDTO);
     }
+
+
 
 }

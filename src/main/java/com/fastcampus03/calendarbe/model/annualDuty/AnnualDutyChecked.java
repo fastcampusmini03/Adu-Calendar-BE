@@ -1,8 +1,6 @@
 package com.fastcampus03.calendarbe.model.annualDuty;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,6 +10,8 @@ import java.time.LocalDateTime;
 @Table(name = "annual_duty_checked_tb")
 @NoArgsConstructor
 @Entity
+@AllArgsConstructor
+@Builder
 public class AnnualDutyChecked {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,6 +19,9 @@ public class AnnualDutyChecked {
 
     @Column(name = "is_shown", nullable = false)
     private Boolean isShown; // 0: 안보여줬다, 1: 보여줬다.
+
+    @Column(nullable = false)
+    private String msg;
 
     @OneToOne(fetch = FetchType.LAZY)
     private AnnualDuty annualDuty;

@@ -1,5 +1,6 @@
 package com.fastcampus03.calendarbe.controller;
 
+import com.fastcampus03.calendarbe.core.auth.session.MyUserDetails;
 import com.fastcampus03.calendarbe.dto.ResponseDTO;
 import com.fastcampus03.calendarbe.dto.annualDuty.AnnualDutyRequest;
 import com.fastcampus03.calendarbe.model.annualDuty.AnnualDuty;
@@ -7,6 +8,7 @@ import com.fastcampus03.calendarbe.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -17,50 +19,57 @@ public class AdminController {
     private final AdminService adminService;
 
     @PostMapping("/s/admin/save/accept/{id}")
-    public ResponseEntity<?> acceptSave(@PathVariable Long saveId){
-        AnnualDuty savedAnnualDuty = adminService.일정등록요청승인(saveId);
-
-        ResponseDTO<?> responseDTO = new ResponseDTO<>(savedAnnualDuty);
+    public ResponseEntity<?> acceptSave(
+            @PathVariable Long saveId,
+            @AuthenticationPrincipal MyUserDetails myUserDetails){
+        ResponseDTO<?> responseDTO = adminService.일정등록요청승인(saveId, myUserDetails);
         return ResponseEntity.ok().body(responseDTO);
     }
 
     @PostMapping("/s/admin/save/reject/{id}")
-    public ResponseEntity<?> rejectSave(@PathVariable Long saveId){
-        adminService.일정등록요청거절(saveId);
+    public ResponseEntity<?> rejectSave(
+            @PathVariable Long saveId,
+            @AuthenticationPrincipal MyUserDetails myUserDetails
+    ){
+        adminService.일정등록요청거절(saveId, myUserDetails);
 
         ResponseDTO<?> responseDTO = new ResponseDTO<>(null);
         return ResponseEntity.ok().body(responseDTO);
     }
 
     @PostMapping("/s/admin/delete/accept/{id}")
-    public ResponseEntity<?> acceptDelete(@PathVariable Long deleteId){
-        AnnualDuty deletedAnnualDuty = adminService.삭제요청승인(deleteId);
-
-        ResponseDTO<?> responseDTO = new ResponseDTO<>(deletedAnnualDuty);
+    public ResponseEntity<?> acceptDelete(
+            @PathVariable Long deleteId,
+            @AuthenticationPrincipal MyUserDetails myUserDetails
+    ){
+        ResponseDTO<?> responseDTO = adminService.삭제요청승인(deleteId, myUserDetails);
         return ResponseEntity.ok().body(responseDTO);
     }
 
     @PostMapping("/s/admin/delete/reject/{id}")
-    public ResponseEntity<?> rejectDelete(@PathVariable Long deleteId){
-        AnnualDuty deletedAnnualDuty = adminService.삭제요청거절(deleteId);
-
-        ResponseDTO<?> responseDTO = new ResponseDTO<>(deletedAnnualDuty);
+    public ResponseEntity<?> rejectDelete(
+            @PathVariable Long deleteId,
+            @AuthenticationPrincipal MyUserDetails myUserDetails
+    ){
+        ResponseDTO<?> responseDTO = adminService.삭제요청거절(deleteId, myUserDetails);
         return ResponseEntity.ok().body(responseDTO);
     }
 
     @PostMapping("/s/admin/update/accept/{id}")
-    public ResponseEntity<?> acceptUpdate(@PathVariable Long updateId){
-        AnnualDuty updatedAnnualDuty = adminService.수정요청승인(updateId);
-
-        ResponseDTO<?> responseDTO = new ResponseDTO<>(updatedAnnualDuty);
+    public ResponseEntity<?> acceptUpdate(
+            @PathVariable Long updateId,
+            @AuthenticationPrincipal MyUserDetails myUserDetails
+    ){
+        ResponseDTO<?> responseDTO = adminService.수정요청승인(updateId, myUserDetails);
         return ResponseEntity.ok().body(responseDTO);
     }
 
     @PostMapping("/s/admin/update/reject/{id}")
-    public ResponseEntity<?> rejectUpdate(@PathVariable Long updateId){
-        AnnualDuty updatedAnnualDuty = adminService.수정요청거절(updateId);
-
-        ResponseDTO<?> responseDTO = new ResponseDTO<>(updatedAnnualDuty);
+    public ResponseEntity<?> rejectUpdate(
+            @PathVariable Long updateId,
+            @AuthenticationPrincipal MyUserDetails myUserDetails
+    ){
+        ResponseDTO<?> responseDTO = adminService.수정요청거절(updateId, myUserDetails);
         return ResponseEntity.ok().body(responseDTO);
     }
 }

@@ -66,7 +66,6 @@ public class AnnualDutyRequest {
 
         @Setter
         @Getter
-        @Builder
         public static class UpdateInDTO{
 
             @NotEmpty
@@ -79,11 +78,17 @@ public class AnnualDutyRequest {
             @NotNull
             private LocalDateTime end;
 
-            @NotEmpty
-            private Long annualDutyId;
+            @AssertTrue(message = "End time should be after start time")
+            public boolean isEndTimeAfterStartTime() {
+                if (start == null || end == null) {
+                    return true;
+                }
+                return end.isAfter(start);
+            }
 
-            public UpdateRequestLog toEntity(){
+            public UpdateRequestLog toEntity(AnnualDuty annualDuty){
                 return UpdateRequestLog.builder()
+                        .annualDuty(annualDuty)
                         .title(title)
                         .startTime(start)
                         .endTime(end)
@@ -95,7 +100,6 @@ public class AnnualDutyRequest {
 
         @Setter
         @Getter
-        @Builder
         public static class DeleteInDTO{
 
             @NotEmpty
