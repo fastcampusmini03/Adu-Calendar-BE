@@ -62,7 +62,7 @@ public class AnnualDutyRequest {
                     .endTime(end)
                     .type(isAllday)
                     .build();
-            //user는 save할 때 ah에서 꺼내서 넣어준다
+            // user는 save할 때 ah에서 꺼내서 넣어준다
         }
     }
 
