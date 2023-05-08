@@ -1,7 +1,6 @@
 package com.fastcampus03.calendarbe.model.log.annualDuty;
 
 import com.fastcampus03.calendarbe.model.annualDuty.AnnualDuty;
-import com.fastcampus03.calendarbe.model.user.User;
 import lombok.*;
 
 import javax.persistence.*;
@@ -10,9 +9,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Table(name = "updated_annual_duty_tb")
+@Table(name = "update_request_log_tb")
 @Entity
-public class UpdatedAnnualDuty {
+public class UpdateRequestLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
