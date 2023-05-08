@@ -1,15 +1,13 @@
 package com.fastcampus03.calendarbe.dto.annualDuty;
 
 import com.fastcampus03.calendarbe.model.annualDuty.AnnualDuty;
+import com.fastcampus03.calendarbe.model.log.update.UpdateRequestLog;
 import com.fastcampus03.calendarbe.model.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
 public class AnnualDutyRequest {
@@ -20,7 +18,7 @@ public class AnnualDutyRequest {
 
         @NotEmpty
         @Size(min = 1, max = 5)
-        private String calendarId;
+        private String calendarId; // 0: 승인중 1: 승인됨 2: 거절
 
         @NotEmpty
         @Pattern(regexp = "^[a-zA-Z가-힣]{1,10}$", message = "한글/영문 1~10자 이내로 작성해주세요")
@@ -31,17 +29,20 @@ public class AnnualDutyRequest {
         private String email;
 
         @NotEmpty
-        @Pattern(regexp = "^[a-zA-Z가-힣]{1,100}$", message = "한글/영문 1~100자 이내로 작성해주세요")
+        @Size(min = 1, max = 100)
         private String title;
 
-        @NotEmpty
+        @NotNull
         private LocalDateTime start;
 
-        @NotEmpty
+        @NotNull
         private LocalDateTime end;
 
-        @NotEmpty
+        @NotNull
         private Boolean isAllday; // false: 당직, true: 연차
+
+        @Pattern(regexp = "USER|ADMIN")
+        private String role;
 
         @AssertTrue(message = "End time should be after start time")
         public boolean isEndTimeAfterStartTime() {
@@ -51,18 +52,15 @@ public class AnnualDutyRequest {
             return end.isAfter(start);
         }
 
-        @NotEmpty
-        private String role;
-
-        public AnnualDuty toEntity() {
+        public AnnualDuty toEntity(User user) {
             return AnnualDuty.builder()
                     .status(calendarId)
                     .title(title)
                     .startTime(start)
                     .endTime(end)
+                    .user(user)
                     .type(isAllday)
                     .build();
-            // user는 save할 때 ah에서 꺼내서 넣어준다
         }
     }
 
@@ -72,24 +70,33 @@ public class AnnualDutyRequest {
         public static class UpdateInDTO{
 
             @NotEmpty
-            @Pattern(regexp = "^[a-zA-Z가-힣]{1,100}$", message = "한글/영문 1~100자 이내로 작성해주세요")
+            @Size(min = 1, max = 100)
             private String title;
 
-            @NotEmpty
+            @NotNull
             private LocalDateTime start;
 
-            @NotEmpty
+            @NotNull
             private LocalDateTime end;
 
             @NotEmpty
             private Long annualDutyId;
+
+            public UpdateRequestLog toEntity(){
+                return UpdateRequestLog.builder()
+                        .title(title)
+                        .startTime(start)
+                        .endTime(end)
+                        .status(false)
+                        .build();
+            }
 
         }
 
         @Setter
         @Getter
         @Builder
-        public static class DeleteDTO{
+        public static class DeleteInDTO{
 
             @NotEmpty
             private Long deleteId;

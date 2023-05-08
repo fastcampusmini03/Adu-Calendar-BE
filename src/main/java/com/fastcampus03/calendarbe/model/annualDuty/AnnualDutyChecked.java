@@ -9,10 +9,10 @@ import java.time.LocalDateTime;
 
 @Setter // DTO 만들면 삭제해야됨
 @Getter
-@Table(name = "annual_duty_accepted")
+@Table(name = "annual_duty_checked_tb")
 @NoArgsConstructor
 @Entity
-public class AnnualDutyAccepted {
+public class AnnualDutyChecked {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

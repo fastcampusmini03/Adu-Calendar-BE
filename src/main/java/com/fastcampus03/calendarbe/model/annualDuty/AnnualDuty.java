@@ -23,7 +23,6 @@ public class AnnualDuty {
     private String status; // 승인중 / 승인 / 거절
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(nullable = false)
     private User user;
 
     @Column(nullable = false, length = 100)
@@ -42,7 +41,7 @@ public class AnnualDuty {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    private Integer updateStatus; // 0: default, 1: 업데이트 요청, 2: 삭제 요청
+    private Integer updateStatus; // null: default, 1: 업데이트 요청, 2: 삭제 요청
 
     @PrePersist
     protected void onCreate() {

@@ -58,4 +58,5 @@ public class UserController {
         ResponseDTO<?> responseDTO = userService.회원정보수정(updateInDTO, myUserDetails);
         return ResponseEntity.ok().body(responseDTO);
     }
+    // 유저 확인 기능
 }
