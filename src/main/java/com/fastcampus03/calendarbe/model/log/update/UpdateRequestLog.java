@@ -1,6 +1,7 @@
 package com.fastcampus03.calendarbe.model.log.update;
 
 import com.fastcampus03.calendarbe.model.annualDuty.AnnualDuty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
@@ -20,7 +21,7 @@ public class UpdateRequestLog {
     private Long id;
 
     @JsonIgnoreProperties("user")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private AnnualDuty annualDuty;
 
     @Column(nullable = false, length = 100)

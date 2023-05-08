@@ -16,10 +16,12 @@ import com.fastcampus03.calendarbe.model.user.UserRepository;
 import com.fastcampus03.calendarbe.util.StatusConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -37,14 +39,7 @@ public class AdminService {
         // 권한의 경우 수정이 가능한 영역이기 때문에 토큰에 있는 권한과 실제 DB에 있는 권한이 다를 수 있음
         // 토큰에 있는 ID가 현재 존재하는 관리자인지 확인
         // DB 조회 후 권한 검증
-        User user = myUserDetails.getUser();
-
-        User userPS = userRepository.findById(user.getId())
-                .orElseThrow(() -> new Exception400("id", "등록되지 않은 유저입니다."));
-
-        if (!userPS.getRole().equals(user.getRole())) {
-            throw new Exception401("권한이 부여되지 않았습니다.");
-        }
+        인증(myUserDetails);
 
         AnnualDuty saveAnnualDutyPS = annualDutyRepository.findById(saveId)
                 .orElseThrow(() -> new Exception400("id", "등록 승인하려는 일정이 존재하지 않습니다."));
@@ -64,14 +59,7 @@ public class AdminService {
 
     @Transactional
     public ResponseDTO<?> 일정등록요청거절(Long saveId, MyUserDetails myUserDetails) {
-        User user = myUserDetails.getUser();
-
-        User userPS = userRepository.findById(user.getId())
-                .orElseThrow(() -> new Exception400("id", "등록되지 않은 유저입니다."));
-
-        if (!userPS.getRole().equals(user.getRole())) {
-            throw new Exception401("권한이 부여되지 않았습니다.");
-        }
+        인증(myUserDetails);
 
         AnnualDuty saveAnnualDutyPS = annualDutyRepository.findById(saveId)
                 .orElseThrow(() -> new Exception400("id", "등록 거절하려는 일정이 존재하지 않습니다. "));
@@ -91,14 +79,7 @@ public class AdminService {
 
     @Transactional
     public ResponseDTO<?> 삭제요청승인(Long deleteId, MyUserDetails myUserDetails) {
-        User user = myUserDetails.getUser();
-
-        User userPS = userRepository.findById(user.getId())
-                .orElseThrow(() -> new Exception400("id", "등록되지 않은 유저입니다."));
-
-        if (!userPS.getRole().equals(user.getRole())) {
-            throw new Exception401("권한이 부여되지 않았습니다.");
-        }
+        인증(myUserDetails);
 
         AnnualDuty deleteAnnualDutyPS = annualDutyRepository.findById(deleteId)
                 .orElseThrow(() -> new Exception400("id", "삭제하려는 일정이 존재하지 않습니다. "));
@@ -119,14 +100,7 @@ public class AdminService {
 
     @Transactional
     public ResponseDTO<?> 삭제요청거절(Long deleteId, MyUserDetails myUserDetails) {
-        User user = myUserDetails.getUser();
-
-        User userPS = userRepository.findById(user.getId())
-                .orElseThrow(() -> new Exception400("id", "등록되지 않은 유저입니다."));
-
-        if (!userPS.getRole().equals(user.getRole())) {
-            throw new Exception401("권한이 부여되지 않았습니다.");
-        }
+        인증(myUserDetails);
 
         AnnualDuty deleteAnnualDutyPS = annualDutyRepository.findById(deleteId)
                 .orElseThrow(() -> new Exception400("id", "삭제하려는 일정이 존재하지 않습니다. "));
@@ -146,14 +120,7 @@ public class AdminService {
 
     @Transactional
     public ResponseDTO<?> 수정요청승인(Long updateId, MyUserDetails myUserDetails) {
-        User user = myUserDetails.getUser();
-
-        User userPS = userRepository.findById(user.getId())
-                .orElseThrow(() -> new Exception400("id", "등록되지 않은 유저입니다."));
-
-        if (!userPS.getRole().equals(user.getRole())) {
-            throw new Exception401("권한이 부여되지 않았습니다.");
-        }
+        인증(myUserDetails);
 
         UpdateRequestLog updateRequestLogPS = updateRequestLogRepository.findById(updateId)
                 .orElseThrow(() -> new Exception400("id", "수정사항이 존재하지 않습니다. "));
@@ -174,15 +141,9 @@ public class AdminService {
         return new ResponseDTO<>(updateAnnualDutyPS);
     }
 
+    @Transactional
     public ResponseDTO<?> 수정요청거절(Long updateId, MyUserDetails myUserDetails) {
-        User user = myUserDetails.getUser();
-
-        User userPS = userRepository.findById(user.getId())
-                .orElseThrow(() -> new Exception400("id", "등록되지 않은 유저입니다."));
-
-        if (!userPS.getRole().equals(user.getRole())) {
-            throw new Exception401("권한이 부여되지 않았습니다.");
-        }
+        인증(myUserDetails);
 
         UpdateRequestLog updateRequestLogPS = updateRequestLogRepository.findById(updateId)
                 .orElseThrow(() -> new Exception400("id", "수정사항이 존재하지 않습니다. "));
@@ -196,5 +157,37 @@ public class AdminService {
                 .msg(StatusConst.ANNUALDUTY_REJECTED)
                 .build());
         return new ResponseDTO<>(updateAnnualDutyPS);
+    }
+
+    public ResponseDTO<?> 승인요청데이터조회(MyUserDetails myUserDetails) {
+        인증(myUserDetails);
+
+        List<AnnualDuty> annualDutyListPS = annualDutyRepository.findAllByStatus(StatusConst.APPROVING);
+        return new ResponseDTO<>(annualDutyListPS);
+    }
+
+    public ResponseDTO<?> 수정요청데이터조회(MyUserDetails myUserDetails) {
+        인증(myUserDetails);
+
+        List<UpdateRequestLog> updateRequestLogListPS = updateRequestLogRepository.findAllByStatus(false);
+        return new ResponseDTO<>(updateRequestLogListPS);
+    }
+
+    public ResponseDTO<?> 삭제요청데이터조회(MyUserDetails myUserDetails) {
+        인증(myUserDetails);
+
+        List<AnnualDuty> annualDutyListPS = annualDutyRepository.findAllByUpdateStatus(StatusConst.UPDATE_DELETESTATUS);
+        return new ResponseDTO<>(annualDutyListPS);
+    }
+
+    private void 인증(MyUserDetails myUserDetails) {
+        User user = myUserDetails.getUser();
+
+        User userPS = userRepository.findById(user.getId())
+                .orElseThrow(() -> new Exception400("id", "등록되지 않은 유저입니다."));
+
+        if (!userPS.getRole().equals(user.getRole())) {
+            throw new Exception401("권한이 부여되지 않았습니다.");
+        }
     }
 }

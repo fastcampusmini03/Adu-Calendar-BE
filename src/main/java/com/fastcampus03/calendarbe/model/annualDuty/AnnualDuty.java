@@ -2,6 +2,8 @@ package com.fastcampus03.calendarbe.model.annualDuty;
 
 import com.fastcampus03.calendarbe.model.user.User;
 import com.fastcampus03.calendarbe.util.StatusConst;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;

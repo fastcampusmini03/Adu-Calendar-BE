@@ -43,14 +43,12 @@ public class AnnualDutyController {
     }
 
     @PostMapping("/s/user/annualDuty/delete/{id}")
-    public ResponseEntity< ? > deleteAnnualDuty(
+    public ResponseEntity<?> deleteAnnualDuty(
             @PathVariable Long id,
             @AuthenticationPrincipal MyUserDetails myUserDetails) {
 
         ResponseDTO<?> responseDTO = annualDutyService.일정삭제(id, myUserDetails);
         return ResponseEntity.ok().body(responseDTO);
     }
-
-
 
 }
