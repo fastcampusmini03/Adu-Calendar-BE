@@ -50,7 +50,6 @@ public class AdminService {
                 .orElseThrow(() -> new Exception400("id", "등록 승인하려는 일정이 존재하지 않습니다."));
         try {
             saveAnnualDutyPS.approvedStatus(); // 승인됨(1)로
-            saveAnnualDutyPS.afterRequestProcess();
             // 유저에게 일정 확인을 전달해주는 로그 기록
             annualDutyCheckedRepository.save(AnnualDutyChecked.builder()
                     .isShown(false)
@@ -77,7 +76,7 @@ public class AdminService {
         AnnualDuty saveAnnualDutyPS = annualDutyRepository.findById(saveId)
                 .orElseThrow(() -> new Exception400("id", "등록 거절하려는 일정이 존재하지 않습니다. "));
         try {
-            saveAnnualDutyPS.afterRequestProcess();
+            saveAnnualDutyPS.rejectedStatus();
             // 유저에게 일정 확인을 전달해주는 로그 기록
             annualDutyCheckedRepository.save(AnnualDutyChecked.builder()
                     .isShown(false)
@@ -188,7 +187,7 @@ public class AdminService {
         UpdateRequestLog updateRequestLogPS = updateRequestLogRepository.findById(updateId)
                 .orElseThrow(() -> new Exception400("id", "수정사항이 존재하지 않습니다. "));
         AnnualDuty updateAnnualDutyPS = updateRequestLogPS.getAnnualDuty();
-        updateRequestLogPS.setStatus(false);
+        updateRequestLogPS.setStatus(true);
         updateAnnualDutyPS.afterRequestProcess();
         // 유저에게 일정 확인을 전달해주는 로그 기록
         annualDutyCheckedRepository.save(AnnualDutyChecked.builder()

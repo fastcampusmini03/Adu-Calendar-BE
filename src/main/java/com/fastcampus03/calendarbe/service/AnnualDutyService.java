@@ -46,6 +46,7 @@ public class AnnualDutyService {
         AnnualDuty prevAnnualDuty = annualDutyRepository.findById(id)
                 .orElseThrow(() -> new Exception400("id", "존재하지 않는 일정입니다. "));
 
+        // jwt 토큰의 id 존재 유무를 확인할 수 있다.
         if(!user.getId().equals(prevAnnualDuty.getUser().getId())){
             throw new Exception401("본인의 일정만 수정할 수 있습니다. ");
         }
@@ -67,6 +68,7 @@ public class AnnualDutyService {
         AnnualDuty deleteAnnualdutyPS = annualDutyRepository.findById(id)
                 .orElseThrow(() -> new Exception400("id", "존재하지 않는 일정입니다. "));
 
+        // jwt 토큰의 id 존재 유무를 확인할 수 있다.
         if(!user.getId().equals(deleteAnnualdutyPS.getUser().getId())){
             throw new Exception401("본인의 일정만 수정할 수 있습니다. ");
         }
