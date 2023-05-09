@@ -17,6 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -51,7 +54,6 @@ public class AnnualDutyService {
             throw new Exception401("본인의 일정만 수정할 수 있습니다. ");
         }
 
-
         try {
             prevAnnualDuty.updateRequest();
             UpdateRequestLog updateRequestLogPS = updateLogRepository.save(updateInDTO.toEntity(prevAnnualDuty));
@@ -77,10 +79,8 @@ public class AnnualDutyService {
         return new ResponseDTO<>(null);
     }
 
-
-//    public List<AnnualDuty> 전체일정조회(){}
-//
-//    public List<AnnualDutyAccepted> 회원별일정조회(Long id){
-//
-//    }
+    public ResponseDTO<?> 일정조회(LocalDateTime startDate, LocalDateTime endDate) {
+        List<AnnualDuty> annualDutyList = annualDutyRepository.findByDateRange(startDate, endDate);
+        return new ResponseDTO<>(annualDutyList);
+    }
 }
