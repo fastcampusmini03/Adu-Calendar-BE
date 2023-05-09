@@ -25,6 +25,7 @@ public class AnnualDuty {
     @Column(nullable = false, length = 5)
     private String status; // 승인중 / 승인 / 거절
 
+//    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 

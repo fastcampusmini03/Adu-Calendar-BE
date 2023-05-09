@@ -119,7 +119,6 @@ public class UserService {
         return new ResponseDTO<>(userPS);
     }
 
-    @Transactional
     public ResponseDTO<?> 요청결과확인(MyUserDetails myUserDetails) {
         // 현재 인증된 사용자의 정보를 가져옵니다.
         User user = myUserDetails.getUser();
@@ -128,9 +127,9 @@ public class UserService {
                 () -> new Exception401("존재하지 않는 회원입니다.")
         );
         List<AnnualDutyChecked> annualDutyCheckedListPS = annualDutyCheckedRepository.findAllByIdAndIsShown(userPS.getId(), false);
-        for (AnnualDutyChecked annualDutyCheckedPS : annualDutyCheckedListPS) {
-            annualDutyCheckedPS.afterUserCheck();
-        }
+//        for (AnnualDutyChecked annualDutyCheckedPS : annualDutyCheckedListPS) {
+//            annualDutyCheckedPS.afterUserCheck();
+//        }
         return new ResponseDTO<>(annualDutyCheckedListPS);
     }
 }
