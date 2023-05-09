@@ -70,4 +70,22 @@ public class AdminController {
         ResponseDTO<?> responseDTO = adminService.수정요청거절(updateId, myUserDetails);
         return ResponseEntity.ok().body(responseDTO);
     }
+
+    @GetMapping("/s/admin/save")
+    public ResponseEntity<?> saveRequestList(@AuthenticationPrincipal MyUserDetails myUserDetails) {
+        ResponseDTO<?> responseDTO = adminService.승인요청데이터조회(myUserDetails);
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @GetMapping("/s/admin/update")
+    public ResponseEntity<?> updateRequestList(@AuthenticationPrincipal MyUserDetails myUserDetails) {
+        ResponseDTO<?> responseDTO = adminService.수정요청데이터조회(myUserDetails);
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @GetMapping("/s/admin/delete")
+    public ResponseEntity<?> deleteRequestList(@AuthenticationPrincipal MyUserDetails myUserDetails) {
+            ResponseDTO<?> responseDTO = adminService.삭제요청데이터조회(myUserDetails);
+        return ResponseEntity.ok().body(responseDTO);
+    }
 }

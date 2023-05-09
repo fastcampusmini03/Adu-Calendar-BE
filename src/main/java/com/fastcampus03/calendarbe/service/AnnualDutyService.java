@@ -7,7 +7,6 @@ import com.fastcampus03.calendarbe.core.exception.Exception500;
 import com.fastcampus03.calendarbe.dto.ResponseDTO;
 import com.fastcampus03.calendarbe.dto.annualDuty.AnnualDutyRequest;
 import com.fastcampus03.calendarbe.model.annualDuty.AnnualDuty;
-import com.fastcampus03.calendarbe.model.annualDuty.AnnualDutyCheckedRepository;
 import com.fastcampus03.calendarbe.model.annualDuty.AnnualDutyRepository;
 import com.fastcampus03.calendarbe.model.log.update.UpdateRequestLog;
 import com.fastcampus03.calendarbe.model.log.update.UpdateRequestLogRepository;
@@ -29,6 +28,7 @@ public class AnnualDutyService {
 
     @Transactional
     public ResponseDTO<?> 일정등록(AnnualDutyRequest.SaveInDTO saveDTO) {
+        // 리팩토링 요소로 남겨둔다.
         User userPS = userRepository.findByEmail(saveDTO.getEmail())
                 .orElseThrow(() -> new Exception400("email", "등록되지 않은 유저입니다."));
         try {

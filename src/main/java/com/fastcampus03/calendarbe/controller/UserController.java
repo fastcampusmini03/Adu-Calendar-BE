@@ -59,4 +59,12 @@ public class UserController {
         return ResponseEntity.ok().body(responseDTO);
     }
     // 유저 확인 기능
+
+    @GetMapping("/s/user/annualDutyCheck")
+    public ResponseEntity<?> annualDutyCheck(
+            @AuthenticationPrincipal MyUserDetails myUserDetails
+    ) {
+        ResponseDTO<?> responseDTO = userService.요청결과확인(myUserDetails);
+        return ResponseEntity.ok().body(responseDTO);
+    }
 }

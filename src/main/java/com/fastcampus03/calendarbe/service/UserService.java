@@ -7,6 +7,8 @@ import com.fastcampus03.calendarbe.core.exception.Exception401;
 import com.fastcampus03.calendarbe.core.exception.Exception500;
 import com.fastcampus03.calendarbe.dto.ResponseDTO;
 import com.fastcampus03.calendarbe.dto.user.UserRequest;
+import com.fastcampus03.calendarbe.model.annualDuty.AnnualDutyChecked;
+import com.fastcampus03.calendarbe.model.annualDuty.AnnualDutyCheckedRepository;
 import com.fastcampus03.calendarbe.model.log.login.LoginLog;
 import com.fastcampus03.calendarbe.model.log.login.LoginLogRepository;
 import com.fastcampus03.calendarbe.model.user.User;
@@ -23,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -34,6 +37,7 @@ public class UserService {
     private final LoginLogRepository loginLogRepository;
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final AnnualDutyCheckedRepository annualDutyCheckedRepository;
 
     public Map<String, Object> 인증(String email, String password){
         try {
@@ -113,5 +117,19 @@ public class UserService {
                 () -> new Exception401("존재하지 않는 회원입니다.")
         );
         return new ResponseDTO<>(userPS);
+    }
+
+    public ResponseDTO<?> 요청결과확인(MyUserDetails myUserDetails) {
+        // 현재 인증된 사용자의 정보를 가져옵니다.
+        User user = myUserDetails.getUser();
+
+        User userPS = userRepository.findById(user.getId()).orElseThrow(
+                () -> new Exception401("존재하지 않는 회원입니다.")
+        );
+        List<AnnualDutyChecked> annualDutyCheckedListPS = annualDutyCheckedRepository.findAllByIdAndIsShown(userPS.getId(), false);
+//        for (AnnualDutyChecked annualDutyCheckedPS : annualDutyCheckedListPS) {
+//            annualDutyCheckedPS.afterUserCheck();
+//        }
+        return new ResponseDTO<>(annualDutyCheckedListPS);
     }
 }

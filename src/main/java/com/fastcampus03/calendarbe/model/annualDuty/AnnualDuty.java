@@ -2,6 +2,8 @@ package com.fastcampus03.calendarbe.model.annualDuty;
 
 import com.fastcampus03.calendarbe.model.user.User;
 import com.fastcampus03.calendarbe.util.StatusConst;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
@@ -23,6 +25,7 @@ public class AnnualDuty {
     @Column(nullable = false, length = 5)
     private String status; // 승인중 / 승인 / 거절
 
+//    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 

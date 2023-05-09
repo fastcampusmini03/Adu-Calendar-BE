@@ -1,6 +1,7 @@
 package com.fastcampus03.calendarbe.model.log.update;
 
 import com.fastcampus03.calendarbe.model.annualDuty.AnnualDuty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
