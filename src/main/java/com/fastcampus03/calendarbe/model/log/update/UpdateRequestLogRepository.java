@@ -1,4 +1,4 @@
-package com.fastcampus03.calendarbe.model.log.annualDuty;
+package com.fastcampus03.calendarbe.model.log.update;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

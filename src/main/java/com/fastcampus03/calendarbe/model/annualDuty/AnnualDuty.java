@@ -1,6 +1,7 @@
 package com.fastcampus03.calendarbe.model.annualDuty;
 
 import com.fastcampus03.calendarbe.model.user.User;
+import com.fastcampus03.calendarbe.util.StatusConst;
 import lombok.*;
 
 import javax.persistence.*;
@@ -23,7 +24,6 @@ public class AnnualDuty {
     private String status; // 승인중 / 승인 / 거절
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(nullable = false)
     private User user;
 
     @Column(nullable = false, length = 100)
@@ -42,7 +42,37 @@ public class AnnualDuty {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    private Integer updateStatus; // 0: default, 1: 업데이트 요청, 2: 삭제 요청
+    private Integer updateStatus; // null: default, 1: 업데이트 요청, 2: 삭제 요청
+
+    public void updateAnnualDuty(String title, LocalDateTime startTime, LocalDateTime endTime) {
+        this.title = title;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
+    public void approvingStatus() {
+        this.status = StatusConst.APPROVING;
+    }
+
+    public void approvedStatus() {
+        this.status = StatusConst.ACCEPTED;
+    }
+
+    public void rejectedStatus() {
+        this.status = StatusConst.REJECTED;
+    }
+
+    public void afterRequestProcess() {
+        this.updateStatus = StatusConst.UPDATE_DEFAULTSTATUS;
+    }
+
+    public void updateRequest() {
+        this.updateStatus = StatusConst.UPDATE_UPDATESTATUS;
+    }
+
+    public void deleteRequest() {
+        this.updateStatus = StatusConst.UPDATE_DELETESTATUS;
+    }
 
     @PrePersist
     protected void onCreate() {
