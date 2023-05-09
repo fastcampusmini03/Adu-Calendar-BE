@@ -5,6 +5,7 @@ import com.fastcampus03.calendarbe.core.exception.Exception400;
 import com.fastcampus03.calendarbe.core.exception.Exception401;
 import com.fastcampus03.calendarbe.core.exception.Exception500;
 import com.fastcampus03.calendarbe.dto.ResponseDTO;
+import com.fastcampus03.calendarbe.dto.admin.AdminRequest;
 import com.fastcampus03.calendarbe.model.annualDuty.AnnualDuty;
 import com.fastcampus03.calendarbe.model.annualDuty.AnnualDutyChecked;
 import com.fastcampus03.calendarbe.model.annualDuty.AnnualDutyCheckedRepository;
@@ -42,7 +43,7 @@ public class AdminService {
         // DB 조회 후 권한 검증
         인증(myUserDetails);
 
-        AnnualDuty saveAnnualDutyPS = annualDutyRepository.findById(saveId)
+        AnnualDuty saveAnnualDutyPS = annualDutyRepository.findByUserId(saveId)
                 .orElseThrow(() -> new Exception400("id", "등록 승인하려는 일정이 존재하지 않습니다."));
         try {
             saveAnnualDutyPS.approvedStatus(); // 승인됨(1)로
@@ -54,7 +55,7 @@ public class AdminService {
                     .build());
             return new ResponseDTO<>(saveAnnualDutyPS);
         }catch (Exception e) {
-            throw new Exception500("일정 삭제에 실패했습니다.");
+            throw new Exception500("일정 등록에 실패했습니다.");
         }
     }
 
@@ -62,7 +63,7 @@ public class AdminService {
     public ResponseDTO<?> 일정등록요청거절(Long saveId, MyUserDetails myUserDetails) {
         인증(myUserDetails);
 
-        AnnualDuty saveAnnualDutyPS = annualDutyRepository.findById(saveId)
+        AnnualDuty saveAnnualDutyPS = annualDutyRepository.findByUserId(saveId)
                 .orElseThrow(() -> new Exception400("id", "등록 거절하려는 일정이 존재하지 않습니다. "));
         try {
             saveAnnualDutyPS.rejectedStatus();
@@ -74,7 +75,7 @@ public class AdminService {
                     .build());
             return new ResponseDTO<>(null);
         }catch (Exception e) {
-            throw new Exception500("일정 삭제에 실패했습니다.");
+            throw new Exception500("일정 등록에 실패했습니다.");
         }
     }
 
@@ -82,7 +83,7 @@ public class AdminService {
     public ResponseDTO<?> 삭제요청승인(Long deleteId, MyUserDetails myUserDetails) {
         인증(myUserDetails);
 
-        AnnualDuty deleteAnnualDutyPS = annualDutyRepository.findById(deleteId)
+        AnnualDuty deleteAnnualDutyPS = annualDutyRepository.findByUserId(deleteId)
                 .orElseThrow(() -> new Exception400("id", "삭제하려는 일정이 존재하지 않습니다. "));
         try {
             deleteAnnualDutyPS.rejectedStatus(); // 거절됨(2)로
@@ -103,7 +104,7 @@ public class AdminService {
     public ResponseDTO<?> 삭제요청거절(Long deleteId, MyUserDetails myUserDetails) {
         인증(myUserDetails);
 
-        AnnualDuty deleteAnnualDutyPS = annualDutyRepository.findById(deleteId)
+        AnnualDuty deleteAnnualDutyPS = annualDutyRepository.findByUserId(deleteId)
                 .orElseThrow(() -> new Exception400("id", "삭제하려는 일정이 존재하지 않습니다. "));
         try {
             deleteAnnualDutyPS.afterRequestProcess();
@@ -113,7 +114,7 @@ public class AdminService {
                     .annualDuty(deleteAnnualDutyPS)
                     .msg(StatusConst.ANNUALDUTY_REJECTED)
                     .build());
-            return new ResponseDTO<>(deleteAnnualDutyPS);
+            return new ResponseDTO<>(null);
         }catch (Exception e) {
             throw new Exception500("일정 삭제에 실패했습니다. ");
         }
@@ -126,20 +127,24 @@ public class AdminService {
         UpdateRequestLog updateRequestLogPS = updateRequestLogRepository.findById(updateId)
                 .orElseThrow(() -> new Exception400("id", "수정사항이 존재하지 않습니다. "));
 
-        AnnualDuty updateAnnualDutyPS = updateRequestLogPS.getAnnualDuty();
-        String title = updateRequestLogPS.getTitle();
-        LocalDateTime startTime = updateRequestLogPS.getStartTime();
-        LocalDateTime endTime = updateRequestLogPS.getEndTime();
-        updateRequestLogPS.setStatus(true); // 처리 완료
-        updateAnnualDutyPS.updateAnnualDuty(title, startTime, endTime);
-        updateAnnualDutyPS.afterRequestProcess();
-        // 유저에게 일정 확인을 전달해주는 로그 기록
-        annualDutyCheckedRepository.save(AnnualDutyChecked.builder()
-                .isShown(false)
-                .annualDuty(updateAnnualDutyPS)
-                .msg(StatusConst.ANNUALDUTY_APPROVED)
-                .build());
-        return new ResponseDTO<>(updateAnnualDutyPS);
+        try {
+            AnnualDuty updateAnnualDutyPS = updateRequestLogPS.getAnnualDuty();
+            String title = updateRequestLogPS.getTitle();
+            LocalDateTime startTime = updateRequestLogPS.getStartTime();
+            LocalDateTime endTime = updateRequestLogPS.getEndTime();
+            updateRequestLogPS.setStatus(true); // 처리 완료
+            updateAnnualDutyPS.updateAnnualDuty(title, startTime, endTime);
+            updateAnnualDutyPS.afterRequestProcess();
+            // 유저에게 일정 확인을 전달해주는 로그 기록
+            annualDutyCheckedRepository.save(AnnualDutyChecked.builder()
+                    .isShown(false)
+                    .annualDuty(updateAnnualDutyPS)
+                    .msg(StatusConst.ANNUALDUTY_APPROVED)
+                    .build());
+            return new ResponseDTO<>(updateAnnualDutyPS);
+        } catch (Exception e) {
+            throw new Exception500("일정 수정에 실패했습니다. ");
+        }
     }
 
     @Transactional
@@ -148,16 +153,20 @@ public class AdminService {
 
         UpdateRequestLog updateRequestLogPS = updateRequestLogRepository.findById(updateId)
                 .orElseThrow(() -> new Exception400("id", "수정사항이 존재하지 않습니다. "));
-        AnnualDuty updateAnnualDutyPS = updateRequestLogPS.getAnnualDuty();
-        updateRequestLogPS.setStatus(true);
-        updateAnnualDutyPS.afterRequestProcess();
-        // 유저에게 일정 확인을 전달해주는 로그 기록
-        annualDutyCheckedRepository.save(AnnualDutyChecked.builder()
-                .isShown(false)
-                .annualDuty(updateAnnualDutyPS)
-                .msg(StatusConst.ANNUALDUTY_REJECTED)
-                .build());
-        return new ResponseDTO<>(updateAnnualDutyPS);
+        try {
+            AnnualDuty updateAnnualDutyPS = updateRequestLogPS.getAnnualDuty();
+            updateRequestLogPS.setStatus(true);
+            updateAnnualDutyPS.afterRequestProcess();
+            // 유저에게 일정 확인을 전달해주는 로그 기록
+            annualDutyCheckedRepository.save(AnnualDutyChecked.builder()
+                    .isShown(false)
+                    .annualDuty(updateAnnualDutyPS)
+                    .msg(StatusConst.ANNUALDUTY_REJECTED)
+                    .build());
+            return new ResponseDTO<>(null);
+        } catch (Exception e) {
+            throw new Exception500("일정 수정에 실패했습니다. ");
+        }
     }
 
     public ResponseDTO<?> 승인요청데이터조회(MyUserDetails myUserDetails) {
@@ -190,5 +199,13 @@ public class AdminService {
         if (!userPS.getRole().equals(user.getRole())) {
             throw new Exception401("권한이 부여되지 않았습니다.");
         }
+    }
+
+    @Transactional
+    public ResponseDTO<?> 유저권한수정(AdminRequest.UpdateRoleDTO updateRoleDTO) {
+        User userPS = userRepository.findByEmail(updateRoleDTO.getEmail())
+                .orElseThrow(() -> new Exception400("email", "등록되지 않은 유저입니다. "));
+        userPS.updateRole(updateRoleDTO.getRole());
+        return new ResponseDTO<>(userPS);
     }
 }

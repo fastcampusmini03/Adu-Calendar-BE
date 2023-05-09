@@ -1,5 +1,6 @@
 package com.fastcampus03.calendarbe.core.dummy;
 
+import com.fastcampus03.calendarbe.model.user.User;
 import com.fastcampus03.calendarbe.model.user.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -14,8 +15,10 @@ public class DataInit extends DummyEntity{
     @Bean
     CommandLineRunner init(UserRepository userRepository){
         return args -> {
-            userRepository.save(newUser("ssar", "쌀"));
-            userRepository.save(newUser("cos", "코스"));
+            User ssar = newUser("ssar", "ADMIN");
+            User cos = newUser("cos", "USER");
+            userRepository.save(ssar);
+            userRepository.save(cos);
         };
     }
 }

@@ -1,5 +1,6 @@
 package com.fastcampus03.calendarbe.model.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
@@ -23,6 +24,7 @@ public class User {
     private String email;
 
     @Column(nullable = false, length = 60) // 패스워드 인코딩(BCrypt)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Column(nullable = false, length = 20)
@@ -40,6 +42,10 @@ public class User {
     public void updateInfo(String password, String username) {
         this.password = password;
         this.username = username;
+    }
+
+    public void updateRole(String newRole) {
+        this.role = newRole;
     }
 
     @PrePersist

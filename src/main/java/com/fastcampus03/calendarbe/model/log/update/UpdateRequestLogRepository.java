@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface UpdateRequestLogRepository extends JpaRepository<UpdateRequestLog, Long> {
 
-    @Query("select url from UpdateRequestLog url where url.status=:status")
+    @Query("select url from UpdateRequestLog url join fetch url.annualDuty where url.status=:status")
     List<UpdateRequestLog> findAllByStatus(boolean status);
 }

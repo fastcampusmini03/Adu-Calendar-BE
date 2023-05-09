@@ -14,6 +14,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 
 @Slf4j
 @RestController
@@ -33,7 +34,7 @@ public class AnnualDutyController {
 
     @PostMapping("/s/user/annualDuty/update/{id}")
     public ResponseEntity<?> updateAnnualDuty(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @RequestBody @Valid AnnualDutyRequest.UpdateInDTO updateInDTO,
             Errors errors,
             @AuthenticationPrincipal MyUserDetails myUserDetails) {
@@ -44,10 +45,18 @@ public class AnnualDutyController {
 
     @PostMapping("/s/user/annualDuty/delete/{id}")
     public ResponseEntity<?> deleteAnnualDuty(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @AuthenticationPrincipal MyUserDetails myUserDetails) {
 
         ResponseDTO<?> responseDTO = annualDutyService.일정삭제(id, myUserDetails);
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @GetMapping("/s/annualDuty")
+    public ResponseEntity<?> showAnnualDutyList(@RequestParam("year") int year, @RequestParam("month") int month){
+        LocalDateTime startDate = LocalDateTime.of(year, month-1, 16, 0, 0, 0);
+        LocalDateTime endDate = LocalDateTime.of(year, month+1, 15, 23, 59, 59);
+        ResponseDTO<?> responseDTO = annualDutyService.일정조회(startDate, endDate);
         return ResponseEntity.ok().body(responseDTO);
     }
 
