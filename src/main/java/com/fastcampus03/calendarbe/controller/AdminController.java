@@ -2,6 +2,7 @@ package com.fastcampus03.calendarbe.controller;
 
 import com.fastcampus03.calendarbe.core.auth.session.MyUserDetails;
 import com.fastcampus03.calendarbe.dto.ResponseDTO;
+import com.fastcampus03.calendarbe.dto.admin.AdminRequest;
 import com.fastcampus03.calendarbe.dto.annualDuty.AnnualDutyRequest;
 import com.fastcampus03.calendarbe.model.annualDuty.AnnualDuty;
 import com.fastcampus03.calendarbe.service.AdminService;
@@ -17,6 +18,13 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
 
     private final AdminService adminService;
+
+    @PostMapping("/s/admin/update/role")
+    public ResponseEntity<?> updateRole(
+            @RequestBody AdminRequest.UpdateRoleDTO updateRoleDTO){
+        ResponseDTO<?> responseDTO = adminService.유저권한수정(updateRoleDTO);
+        return ResponseEntity.ok().body(responseDTO);
+    }
 
     @PostMapping("/s/admin/save/accept/{id}")
     public ResponseEntity<?> acceptSave(
