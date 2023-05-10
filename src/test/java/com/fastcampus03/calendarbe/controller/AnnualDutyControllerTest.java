@@ -10,6 +10,7 @@ import com.fastcampus03.calendarbe.model.user.User;
 import com.fastcampus03.calendarbe.model.user.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -286,6 +287,7 @@ class AnnualDutyControllerTest extends MyRestDoc {
         log.info("responseBody={}", responseBody);
 
         // then
+        Assertions.assertThat(annualDuty.getUpdateStatus()).isEqualTo(2);
         resultActions.andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.msg").value("성공"))
                 .andExpect(jsonPath("$.data").isEmpty())
