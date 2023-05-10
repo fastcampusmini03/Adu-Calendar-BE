@@ -18,15 +18,14 @@ public class DummyEntity {
                 .build();
     }
 
-    public AnnualDuty newAD(String username){
-        User user = newUser(username, "USER");
+    public AnnualDuty newAD(User user){
         return AnnualDuty.builder()
                 .user(user)
                 .startTime(LocalDateTime.now())
-                .endTime(LocalDateTime.now())
+                .endTime(LocalDateTime.now().plusDays(5))
                 .status("0")
                 .type(true)
-                .title(username + "의 일정")
+                .title(user.getUsername() + "의 일정")
                 .build();
     }
 

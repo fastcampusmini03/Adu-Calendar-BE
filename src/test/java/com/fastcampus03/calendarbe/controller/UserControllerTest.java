@@ -6,6 +6,7 @@ import com.fastcampus03.calendarbe.core.dummy.DummyEntity;
 import com.fastcampus03.calendarbe.dto.user.UserRequest;
 import com.fastcampus03.calendarbe.model.user.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,6 +32,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Slf4j
 @DisplayName("회원 API")
 @AutoConfigureRestDocs(uriScheme = "http", uriHost = "localhost", uriPort = 8080)
 @ActiveProfiles("test")
@@ -63,9 +65,9 @@ public class UserControllerTest extends MyRestDoc {
     public void join_test() throws Exception {
         // given
         UserRequest.JoinInDTO joinInDTO = new UserRequest.JoinInDTO();
-        joinInDTO.setUsername("love");
-        joinInDTO.setPassword("1234");
         joinInDTO.setEmail("love@nate.com");
+        joinInDTO.setPassword("1234");
+        joinInDTO.setUsername("love");
         String requestBody = om.writeValueAsString(joinInDTO);
 
         // when
@@ -90,7 +92,7 @@ public class UserControllerTest extends MyRestDoc {
          * }
          */
         // then
-        resultActions.andExpect(jsonPath("$.data.id").value(3L));
+        resultActions.andExpect(jsonPath("$.data.id").value(4L));
         resultActions.andExpect(jsonPath("$.data.username").value("love"));
         resultActions.andExpect(jsonPath("$.data.role").value("USER"));
         resultActions.andExpect(status().isCreated());
@@ -338,6 +340,7 @@ public class UserControllerTest extends MyRestDoc {
         // when
         ResultActions resultActions = mvc.perform(requestBuilder);
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
         System.out.println("테스트 : " + responseBody);
     }
@@ -352,5 +355,7 @@ public class UserControllerTest extends MyRestDoc {
                 .perform(get("/s/user/annualDutyCheck"));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : " + responseBody);
+        
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 }
