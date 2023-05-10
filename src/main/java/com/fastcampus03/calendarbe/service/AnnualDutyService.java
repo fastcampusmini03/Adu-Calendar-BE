@@ -1,5 +1,7 @@
 package com.fastcampus03.calendarbe.service;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fastcampus03.calendarbe.core.auth.jwt.MyJwtProvider;
 import com.fastcampus03.calendarbe.core.auth.session.MyUserDetails;
 import com.fastcampus03.calendarbe.core.exception.Exception400;
 import com.fastcampus03.calendarbe.core.exception.Exception401;
@@ -17,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -79,8 +82,32 @@ public class AnnualDutyService {
         return new ResponseDTO<>(null);
     }
 
-    public ResponseDTO<?> 일정조회(LocalDateTime startDate, LocalDateTime endDate) {
-        List<AnnualDuty> annualDutyList = annualDutyRepository.findByDateRange(startDate, endDate);
-        return new ResponseDTO<>(annualDutyList);
+    public ResponseDTO<?> 일정조회(LocalDateTime startDate, LocalDateTime endDate, String prefixJwt) {
+        if (prefixJwt == null) {
+            List<AnnualDuty> annualDutyList = annualDutyRepository.findByDateRange(startDate, endDate);
+            return new ResponseDTO<>(annualDutyList);
+        }else{
+            String jwt = prefixJwt.replace(MyJwtProvider.TOKEN_PREFIX, "");
+            System.out.println("디버그 : 토큰 있음");
+            DecodedJWT decodedJWT = MyJwtProvider.verify(jwt);
+            Long id = decodedJWT.getClaim("id").asLong();
+
+            User user = userRepository.findById(id)
+                    .orElseThrow(() -> new Exception400("id", "존재하지 않는 유저입니다. "));
+
+            String role = decodedJWT.getClaim("role").asString();
+            if (role.equals("ADMIN")){
+                List<AnnualDuty> annualDutyList = annualDutyRepository.findByDateRangeForAdmin(startDate, endDate);
+                return new ResponseDTO<>(annualDutyList);
+
+            }else if (role.equals("USER")){
+                String email = user.getEmail();
+                List<AnnualDuty> annualDutyList = annualDutyRepository.findByDateRangeForUser(email, startDate, endDate);
+                return new ResponseDTO<>(annualDutyList);
+
+            }else{
+                throw new Exception400("role", "존재하지 않는 권한입니다. ");
+            }
+        }
     }
 }

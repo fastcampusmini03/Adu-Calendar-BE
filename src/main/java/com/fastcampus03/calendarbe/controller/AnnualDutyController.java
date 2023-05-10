@@ -1,5 +1,6 @@
 package com.fastcampus03.calendarbe.controller;
 
+import com.fastcampus03.calendarbe.core.auth.jwt.MyJwtProvider;
 import com.fastcampus03.calendarbe.core.auth.session.MyUserDetails;
 import com.fastcampus03.calendarbe.dto.ResponseDTO;
 import com.fastcampus03.calendarbe.dto.annualDuty.AnnualDutyRequest;
@@ -13,6 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 
@@ -52,11 +54,13 @@ public class AnnualDutyController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @GetMapping("/s/annualDuty")
-    public ResponseEntity<?> showAnnualDutyList(@RequestParam("year") int year, @RequestParam("month") int month){
+    @GetMapping("/annualDuty")
+    public ResponseEntity<?> showAnnualDutyList(@RequestParam("year") int year, @RequestParam("month") int month, HttpServletRequest request){
         LocalDateTime startDate = LocalDateTime.of(year, month-1, 16, 0, 0, 0);
         LocalDateTime endDate = LocalDateTime.of(year, month+1, 15, 23, 59, 59);
-        ResponseDTO<?> responseDTO = annualDutyService.일정조회(startDate, endDate);
+        String prefixJwt = request.getHeader(MyJwtProvider.HEADER);
+
+        ResponseDTO<?> responseDTO = annualDutyService.일정조회(startDate, endDate, prefixJwt);
         return ResponseEntity.ok().body(responseDTO);
     }
 
