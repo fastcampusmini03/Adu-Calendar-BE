@@ -20,7 +20,7 @@ public interface AnnualDutyRepository extends JpaRepository<AnnualDuty, Long> {
     Optional<AnnualDuty> findByUserId(Long id);
 
 
-    @Query("select ad from AnnualDuty ad " +
+    @Query("select ad from AnnualDuty ad join fetch ad.user " +
             "where (ad.status='0' or ad.status='1') " +
             "and ((ad.startTime BETWEEN :startDate AND :endDate )" +
             "or (ad.endTime BETWEEN :startDate AND :endDate) " +
