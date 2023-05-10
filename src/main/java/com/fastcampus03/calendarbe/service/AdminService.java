@@ -6,10 +6,7 @@ import com.fastcampus03.calendarbe.core.exception.Exception401;
 import com.fastcampus03.calendarbe.core.exception.Exception500;
 import com.fastcampus03.calendarbe.dto.ResponseDTO;
 import com.fastcampus03.calendarbe.dto.admin.AdminRequest;
-import com.fastcampus03.calendarbe.model.annualDuty.AnnualDuty;
-import com.fastcampus03.calendarbe.model.annualDuty.AnnualDutyChecked;
-import com.fastcampus03.calendarbe.model.annualDuty.AnnualDutyCheckedRepository;
-import com.fastcampus03.calendarbe.model.annualDuty.AnnualDutyRepository;
+import com.fastcampus03.calendarbe.model.annualDuty.*;
 import com.fastcampus03.calendarbe.model.log.update.UpdateRequestLog;
 import com.fastcampus03.calendarbe.model.log.update.UpdateRequestLogRepository;
 import com.fastcampus03.calendarbe.model.user.User;
@@ -17,8 +14,7 @@ import com.fastcampus03.calendarbe.model.user.UserRepository;
 import com.fastcampus03.calendarbe.util.StatusConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Hibernate;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +32,7 @@ public class AdminService {
     private final UpdateRequestLogRepository updateRequestLogRepository;
     private final AnnualDutyCheckedRepository annualDutyCheckedRepository;
 
+    private final AnnualDutyQueryRepository annualDutyQueryRepository;
     @Transactional
     public ResponseDTO<?> 일정등록요청승인(Long saveId, MyUserDetails myUserDetails) {
         // 권한의 경우 수정이 가능한 영역이기 때문에 토큰에 있는 권한과 실제 DB에 있는 권한이 다를 수 있음
@@ -169,24 +166,24 @@ public class AdminService {
         }
     }
 
-    public ResponseDTO<?> 승인요청데이터조회(MyUserDetails myUserDetails) {
+    public ResponseDTO<?> 승인요청데이터조회(Integer page, MyUserDetails myUserDetails) {
         인증(myUserDetails);
 
-        List<AnnualDuty> annualDutyListPS = annualDutyRepository.findAllByStatus(StatusConst.APPROVING);
+        Page<AnnualDuty> annualDutyListPS = annualDutyQueryRepository.findAllByStatus(page, StatusConst.APPROVING);
         return new ResponseDTO<>(annualDutyListPS);
     }
 
-    public ResponseDTO<?> 수정요청데이터조회(MyUserDetails myUserDetails) {
+    public ResponseDTO<?> 수정요청데이터조회(Integer page, MyUserDetails myUserDetails) {
         인증(myUserDetails);
 
-        List<UpdateRequestLog> updateRequestLogListPS = updateRequestLogRepository.findAllByStatus(false);
+        Page<UpdateRequestLog> updateRequestLogListPS = annualDutyQueryRepository.findAllByUpdateLogStatus(page, false);
         return new ResponseDTO<>(updateRequestLogListPS);
     }
 
-    public ResponseDTO<?> 삭제요청데이터조회(MyUserDetails myUserDetails) {
+    public ResponseDTO<?> 삭제요청데이터조회(Integer page, MyUserDetails myUserDetails) {
         인증(myUserDetails);
 
-        List<AnnualDuty> annualDutyListPS = annualDutyRepository.findAllByUpdateStatus(StatusConst.UPDATE_DELETESTATUS);
+        Page<AnnualDuty> annualDutyListPS = annualDutyQueryRepository.findAllByUpdateStatus(page, StatusConst.UPDATE_DELETESTATUS);
         return new ResponseDTO<>(annualDutyListPS);
     }
 
@@ -202,10 +199,17 @@ public class AdminService {
     }
 
     @Transactional
-    public ResponseDTO<?> 유저권한수정(AdminRequest.UpdateRoleDTO updateRoleDTO) {
+    public ResponseDTO<?> 유저권한수정(AdminRequest.UpdateRoleDTO updateRoleDTO, MyUserDetails myUserDetails) {
+        인증(myUserDetails);
         User userPS = userRepository.findByEmail(updateRoleDTO.getEmail())
                 .orElseThrow(() -> new Exception400("email", "등록되지 않은 유저입니다. "));
         userPS.updateRole(updateRoleDTO.getRole());
         return new ResponseDTO<>(userPS);
+    }
+
+    public ResponseDTO<?> 전체유저조회(Integer page, MyUserDetails myUserDetails) {
+        인증(myUserDetails);
+        Page<User> UsersList = annualDutyQueryRepository.findAllUser(page);
+        return new ResponseDTO<>(UsersList);
     }
 }

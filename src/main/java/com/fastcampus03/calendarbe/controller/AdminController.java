@@ -21,8 +21,9 @@ public class AdminController {
 
     @PostMapping("/s/admin/update/role")
     public ResponseEntity<?> updateRole(
-            @RequestBody AdminRequest.UpdateRoleDTO updateRoleDTO){
-        ResponseDTO<?> responseDTO = adminService.유저권한수정(updateRoleDTO);
+            @RequestBody AdminRequest.UpdateRoleDTO updateRoleDTO,
+            @AuthenticationPrincipal MyUserDetails myUserDetails){
+        ResponseDTO<?> responseDTO = adminService.유저권한수정(updateRoleDTO, myUserDetails);
         return ResponseEntity.ok().body(responseDTO);
     }
 
@@ -80,20 +81,34 @@ public class AdminController {
     }
 
     @GetMapping("/s/admin/save")
-    public ResponseEntity<?> saveRequestList(@AuthenticationPrincipal MyUserDetails myUserDetails) {
-        ResponseDTO<?> responseDTO = adminService.승인요청데이터조회(myUserDetails);
+    public ResponseEntity<?> saveRequestList(
+            @RequestParam(defaultValue ="0") Integer page,
+            @AuthenticationPrincipal MyUserDetails myUserDetails) {
+        ResponseDTO<?> responseDTO = adminService.승인요청데이터조회(page, myUserDetails);
         return ResponseEntity.ok().body(responseDTO);
     }
 
     @GetMapping("/s/admin/update")
-    public ResponseEntity<?> updateRequestList(@AuthenticationPrincipal MyUserDetails myUserDetails) {
-        ResponseDTO<?> responseDTO = adminService.수정요청데이터조회(myUserDetails);
+    public ResponseEntity<?> updateRequestList(
+            @RequestParam(defaultValue ="0") Integer page,
+            @AuthenticationPrincipal MyUserDetails myUserDetails) {
+        ResponseDTO<?> responseDTO = adminService.수정요청데이터조회(page,myUserDetails);
         return ResponseEntity.ok().body(responseDTO);
     }
 
     @GetMapping("/s/admin/delete")
-    public ResponseEntity<?> deleteRequestList(@AuthenticationPrincipal MyUserDetails myUserDetails) {
-            ResponseDTO<?> responseDTO = adminService.삭제요청데이터조회(myUserDetails);
+    public ResponseEntity<?> deleteRequestList(
+            @RequestParam(defaultValue ="0") Integer page,
+            @AuthenticationPrincipal MyUserDetails myUserDetails) {
+            ResponseDTO<?> responseDTO = adminService.삭제요청데이터조회(page, myUserDetails);
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @GetMapping("/s/admin/users")
+    public ResponseEntity<?> usersList(
+            @RequestParam(defaultValue ="0") Integer page,
+            @AuthenticationPrincipal MyUserDetails myUserDetails) {
+        ResponseDTO<?> responseDTO = adminService.전체유저조회(page, myUserDetails);
         return ResponseEntity.ok().body(responseDTO);
     }
 }

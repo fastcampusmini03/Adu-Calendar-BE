@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -103,7 +102,6 @@ public class UserService {
         User userPS = userRepository.findById(user.getId()).orElseThrow(
                 () -> new Exception401("존재하지 않는 회원입니다.")
         );
-
         // 수정하려는 사용자의 정보를 업데이트합니다.
         userPS.updateInfo(passwordEncoder.encode(updateInDTO.getPassword()), updateInDTO.getUsername());
         return new ResponseDTO<>(userPS);
@@ -119,7 +117,7 @@ public class UserService {
         return new ResponseDTO<>(userPS);
     }
 
-    public ResponseDTO<?> 요청결과확인(MyUserDetails myUserDetails) {
+    public ResponseDTO<?> 요청결과확인조회(MyUserDetails myUserDetails) {
         // 현재 인증된 사용자의 정보를 가져옵니다.
         User user = myUserDetails.getUser();
 
@@ -131,5 +129,23 @@ public class UserService {
 //            annualDutyCheckedPS.afterUserCheck();
 //        }
         return new ResponseDTO<>(annualDutyCheckedListPS);
+    }
+
+
+    @Transactional
+    public ResponseDTO<?> 요청결과확인(List<Long> updateRequestLogList, MyUserDetails myUserDetails) {
+        // 현재 인증된 사용자의 정보를 가져옵니다.
+        User user = myUserDetails.getUser();
+        User userPS = userRepository.findById(user.getId()).orElseThrow(
+                () -> new Exception401("존재하지 않는 회원입니다.")
+        );
+
+        for (Long id : updateRequestLogList){
+            AnnualDutyChecked annualDutyCheckedPS = annualDutyCheckedRepository.findById(id).orElseThrow(
+                    () -> new Exception401("존재하지 않는 일정입니다.")
+            );
+            annualDutyCheckedPS.afterUserCheck();
+        }
+        return new ResponseDTO<>(null);
     }
 }

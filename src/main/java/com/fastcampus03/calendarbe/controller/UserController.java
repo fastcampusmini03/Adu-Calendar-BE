@@ -4,6 +4,7 @@ import com.fastcampus03.calendarbe.core.auth.jwt.MyJwtProvider;
 import com.fastcampus03.calendarbe.core.auth.session.MyUserDetails;
 import com.fastcampus03.calendarbe.dto.ResponseDTO;
 import com.fastcampus03.calendarbe.dto.user.UserRequest;
+import com.fastcampus03.calendarbe.model.log.update.UpdateRequestLog;
 import com.fastcampus03.calendarbe.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 
@@ -64,7 +66,17 @@ public class UserController {
     public ResponseEntity<?> annualDutyCheck(
             @AuthenticationPrincipal MyUserDetails myUserDetails
     ) {
-        ResponseDTO<?> responseDTO = userService.요청결과확인(myUserDetails);
+        ResponseDTO<?> responseDTO = userService.요청결과확인조회(myUserDetails);
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @PostMapping("/s/user/annualDutyCheck")
+    public ResponseEntity<?> annualDutyCheckUpdate(
+            @RequestBody Map<String, List<Long>> requestData,
+            @AuthenticationPrincipal MyUserDetails myUserDetails
+    ) {
+        List<Long> updateRequestLogList = requestData.get("updateRequestLogList");
+        ResponseDTO<?> responseDTO = userService.요청결과확인(updateRequestLogList, myUserDetails);
         return ResponseEntity.ok().body(responseDTO);
     }
 }
