@@ -4,6 +4,7 @@ import com.fastcampus03.calendarbe.core.auth.session.MyUserDetails;
 import com.fastcampus03.calendarbe.core.exception.Exception400;
 import com.fastcampus03.calendarbe.core.exception.Exception401;
 import com.fastcampus03.calendarbe.core.exception.Exception500;
+import com.fastcampus03.calendarbe.core.util.StatusConst;
 import com.fastcampus03.calendarbe.dto.ResponseDTO;
 import com.fastcampus03.calendarbe.dto.admin.AdminRequest;
 import com.fastcampus03.calendarbe.model.annualDuty.*;
@@ -11,7 +12,6 @@ import com.fastcampus03.calendarbe.model.log.update.UpdateRequestLog;
 import com.fastcampus03.calendarbe.model.log.update.UpdateRequestLogRepository;
 import com.fastcampus03.calendarbe.model.user.User;
 import com.fastcampus03.calendarbe.model.user.UserRepository;
-import com.fastcampus03.calendarbe.util.StatusConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -89,7 +89,7 @@ public class AdminService {
             annualDutyCheckedRepository.save(AnnualDutyChecked.builder()
                     .isShown(false)
                     .annualDuty(deleteAnnualDutyPS)
-                    .msg(StatusConst.ANNUALDUTY_APPROVED)
+                    .msg(StatusConst.ANNUALDUTY_DELETE_APPROVED)
                     .build());
             return new ResponseDTO<>(null);
         }catch (Exception e) {
@@ -109,7 +109,7 @@ public class AdminService {
             annualDutyCheckedRepository.save(AnnualDutyChecked.builder()
                     .isShown(false)
                     .annualDuty(deleteAnnualDutyPS)
-                    .msg(StatusConst.ANNUALDUTY_REJECTED)
+                    .msg(StatusConst.ANNUALDUTY_DELETE_REJECTED)
                     .build());
             return new ResponseDTO<>(null);
         }catch (Exception e) {
@@ -136,7 +136,7 @@ public class AdminService {
             annualDutyCheckedRepository.save(AnnualDutyChecked.builder()
                     .isShown(false)
                     .annualDuty(updateAnnualDutyPS)
-                    .msg(StatusConst.ANNUALDUTY_APPROVED)
+                    .msg(StatusConst.ANNUALDUTY_UPDATE_APPROVED)
                     .build());
             return new ResponseDTO<>(updateAnnualDutyPS);
         } catch (Exception e) {
@@ -158,7 +158,7 @@ public class AdminService {
             annualDutyCheckedRepository.save(AnnualDutyChecked.builder()
                     .isShown(false)
                     .annualDuty(updateAnnualDutyPS)
-                    .msg(StatusConst.ANNUALDUTY_REJECTED)
+                    .msg(StatusConst.ANNUALDUTY_UPDATE_REJECTED)
                     .build());
             return new ResponseDTO<>(null);
         } catch (Exception e) {
