@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 public class AnnualDutyRequest {
     @Setter
     @Getter
-    @Builder
     public static class SaveInDTO {
 
         @NotEmpty
@@ -76,9 +75,11 @@ public class AnnualDutyRequest {
             private String title;
 
             @NotNull
+            @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
             private LocalDateTime start;
 
             @NotNull
+            @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
             private LocalDateTime end;
 
             @AssertTrue(message = "End time should be after start time")

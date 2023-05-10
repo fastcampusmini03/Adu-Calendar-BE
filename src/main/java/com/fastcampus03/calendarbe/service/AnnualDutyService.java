@@ -36,12 +36,12 @@ public class AnnualDutyService {
     public ResponseDTO<?> 일정등록(AnnualDutyRequest.SaveInDTO saveDTO) {
         // 리팩토링 요소로 남겨둔다.
         User userPS = userRepository.findByEmail(saveDTO.getEmail())
-                .orElseThrow(() -> new Exception400("email", "등록되지 않은 유저입니다."));
+                .orElseThrow(() -> new Exception400("email", "등록되지 않은 유저입니다"));
         try {
             AnnualDuty annualDutyPS = annualDutyRepository.save(saveDTO.toEntity(userPS));
             return new ResponseDTO<>(annualDutyPS);
         } catch (Exception e) {
-            throw new Exception500("일정 등록에 실패하였습니다. "  + e.getMessage());
+            throw new Exception500("일정 등록에 실패하였습니다."  + e.getMessage());
         }
     }
 
@@ -50,11 +50,11 @@ public class AnnualDutyService {
         User user = myUserDetails.getUser();
 
         AnnualDuty prevAnnualDuty = annualDutyRepository.findById(id)
-                .orElseThrow(() -> new Exception400("id", "존재하지 않는 일정입니다. "));
+                .orElseThrow(() -> new Exception400("id", "존재하지 않는 일정입니다."));
 
         // jwt 토큰의 id 존재 유무를 확인할 수 있다.
         if(!user.getId().equals(prevAnnualDuty.getUser().getId())){
-            throw new Exception401("본인의 일정만 수정할 수 있습니다. ");
+            throw new Exception401("본인의 일정만 수정할 수 있습니다.");
         }
 
         try {
@@ -71,11 +71,11 @@ public class AnnualDutyService {
         User user = myUserDetails.getUser();
 
         AnnualDuty deleteAnnualdutyPS = annualDutyRepository.findById(id)
-                .orElseThrow(() -> new Exception400("id", "존재하지 않는 일정입니다. "));
+                .orElseThrow(() -> new Exception400("id", "존재하지 않는 일정입니다."));
 
         // jwt 토큰의 id 존재 유무를 확인할 수 있다.
         if(!user.getId().equals(deleteAnnualdutyPS.getUser().getId())){
-            throw new Exception401("본인의 일정만 수정할 수 있습니다. ");
+            throw new Exception401("본인의 일정만 수정할 수 있습니다.");
         }
 
         deleteAnnualdutyPS.deleteRequest(); // null -> 2
