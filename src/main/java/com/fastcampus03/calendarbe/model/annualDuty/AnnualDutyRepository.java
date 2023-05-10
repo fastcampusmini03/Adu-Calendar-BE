@@ -19,11 +19,25 @@ public interface AnnualDutyRepository extends JpaRepository<AnnualDuty, Long> {
     @Query("select ad from AnnualDuty ad join fetch ad.user where ad.id=:id")
     Optional<AnnualDuty> findByUserId(Long id);
 
+    @Query("select ad from AnnualDuty ad join fetch ad.user " +
+            "where (ad.status='1') " +
+            "and ((ad.startTime BETWEEN :startDate AND :endDate )" +
+            "or (ad.endTime BETWEEN :startDate AND :endDate) " +
+            "or (ad.startTime <= :endDate AND ad.endTime >= :startDate ))")
+    List<AnnualDuty> findByDateRange(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
     @Query("select ad from AnnualDuty ad join fetch ad.user " +
             "where (ad.status='0' or ad.status='1') " +
             "and ((ad.startTime BETWEEN :startDate AND :endDate )" +
             "or (ad.endTime BETWEEN :startDate AND :endDate) " +
             "or (ad.startTime <= :endDate AND ad.endTime >= :startDate ))")
-    List<AnnualDuty> findByDateRange(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+    List<AnnualDuty> findByDateRangeForAdmin(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+
+    @Query("select ad from AnnualDuty ad join fetch ad.user " +
+            "where (ad.status='0' and ad.user.email = :email)" +
+            "or (ad.status='1') " +
+            "and ((ad.startTime BETWEEN :startDate AND :endDate )" +
+            "or (ad.endTime BETWEEN :startDate AND :endDate) " +
+            "or (ad.startTime <= :endDate AND ad.endTime >= :startDate ))")
+    List<AnnualDuty> findByDateRangeForUser(@Param("email") String email, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 }
