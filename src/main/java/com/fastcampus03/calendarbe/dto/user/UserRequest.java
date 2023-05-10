@@ -13,7 +13,6 @@ import javax.validation.constraints.Size;
 public class UserRequest {
     @Setter
     @Getter
-    @Builder
     public static class LoginInDTO {
 
         @Pattern(regexp = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$", message = "이메일 형식으로 작성해주세요")
