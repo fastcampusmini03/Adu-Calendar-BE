@@ -340,6 +340,7 @@ public class UserControllerTest extends MyRestDoc {
         // when
         ResultActions resultActions = mvc.perform(requestBuilder);
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
         System.out.println("테스트 : " + responseBody);
     }
@@ -354,5 +355,7 @@ public class UserControllerTest extends MyRestDoc {
                 .perform(get("/s/user/annualDutyCheck"));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : " + responseBody);
+        
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 }
