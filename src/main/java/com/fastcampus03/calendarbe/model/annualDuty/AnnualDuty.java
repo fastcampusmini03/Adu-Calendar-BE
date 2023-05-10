@@ -1,13 +1,10 @@
 package com.fastcampus03.calendarbe.model.annualDuty;
 
 import com.fastcampus03.calendarbe.model.user.User;
-import com.fastcampus03.calendarbe.util.StatusConst;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fastcampus03.calendarbe.core.util.StatusConst;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Builder
