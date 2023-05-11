@@ -29,6 +29,17 @@ public class DummyEntity {
                 .build();
     }
 
+    public AnnualDuty newADWithApproved(User user){
+        return AnnualDuty.builder()
+                .user(user)
+                .startTime(LocalDateTime.now())
+                .endTime(LocalDateTime.now().plusDays(5))
+                .status("1")
+                .type(true)
+                .title(user.getUsername() + "의 일정")
+                .build();
+    }
+
     public User newMockUser(Long id, String username, String fullName){
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return User.builder()
