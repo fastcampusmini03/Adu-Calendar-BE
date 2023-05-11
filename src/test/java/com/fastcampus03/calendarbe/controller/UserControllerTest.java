@@ -4,6 +4,11 @@ import com.fastcampus03.calendarbe.core.MyRestDoc;
 import com.fastcampus03.calendarbe.core.auth.jwt.MyJwtProvider;
 import com.fastcampus03.calendarbe.core.dummy.DummyEntity;
 import com.fastcampus03.calendarbe.dto.user.UserRequest;
+import com.fastcampus03.calendarbe.model.annualDuty.AnnualDuty;
+import com.fastcampus03.calendarbe.model.annualDuty.AnnualDutyChecked;
+import com.fastcampus03.calendarbe.model.annualDuty.AnnualDutyCheckedRepository;
+import com.fastcampus03.calendarbe.model.annualDuty.AnnualDutyRepository;
+import com.fastcampus03.calendarbe.model.user.User;
 import com.fastcampus03.calendarbe.model.user.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -16,16 +21,22 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -38,6 +49,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @Sql("classpath:db/teardown.sql")
 @AutoConfigureMockMvc
+@Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class UserControllerTest extends MyRestDoc {
 
@@ -51,6 +63,12 @@ public class UserControllerTest extends MyRestDoc {
     private UserRepository userRepository;
     @Autowired
     private EntityManager em;
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private AnnualDutyRepository annualDutyRepository;
+    @Autowired
+    private AnnualDutyCheckedRepository annualDutyCheckedRepository;
 
     @BeforeEach
     public void setUp() {
@@ -309,50 +327,166 @@ public class UserControllerTest extends MyRestDoc {
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
-    /**
-     * question
-     * 테스트 : ??? 아무것도 나오지 않는데 이유를 모르겠음
-     */
     @DisplayName("업데이트 성공")
+    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
     public void update_test() throws Exception {
         // given
-        UserRequest.LoginInDTO loginInDTO = new UserRequest.LoginInDTO();
-        loginInDTO.setEmail("ssar@nate.com");
-        loginInDTO.setPassword("1234");
-        String requestBody = om.writeValueAsString(loginInDTO);
+        User ssar = userRepository.findByEmail("ssar@nate.com").get();
+        String token = MyJwtProvider.create(ssar);
 
         UserRequest.UpdateInDTO updateInDTO = new UserRequest.UpdateInDTO();
         updateInDTO.setUsername("archie");
-        updateInDTO.setPassword("7316");
-        String updateRequestBody = om.writeValueAsString(updateInDTO);
-
-        // when
-        ResultActions loginResultActions = mvc
-                .perform(post("/login").content(requestBody).contentType(MediaType.APPLICATION_JSON));
-        String token = loginResultActions.andReturn().getResponse().getHeader("Authorization");
-
-        MockHttpServletRequestBuilder requestBuilder = post("/s/user/update")
-                .header("Authorization", "Bearer " + token)
-                .content(updateRequestBody)
-                .contentType(MediaType.APPLICATION_JSON);
-
-        // when
-        ResultActions resultActions = mvc.perform(requestBuilder);
-        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-
-        System.out.println("테스트 : " + responseBody);
-    }
-
-    @DisplayName("요청결과 확인")
-    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
-    @Test
-    public void annualDutyCheck_test() throws Exception {
+        updateInDTO.setPassword("5678");
+        String requestBody = om.writeValueAsString(updateInDTO);
 
         // when
         ResultActions resultActions = mvc
-                .perform(get("/s/user/annualDutyCheck"));
+                .perform(post("/s/user")
+                        .header("Authorization", "Bearer " + token)
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-        System.out.println("테스트 : " + responseBody);
+        log.info("responseBody={}", responseBody);
+
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.msg").value("성공"))
+                .andExpect(jsonPath("$.data.id").value(ssar.getId()))
+                .andExpect(jsonPath("$.data.username").value("archie"))
+                .andDo(MockMvcResultHandlers.print()).andDo(document);
+        Assertions.assertThat(passwordEncoder.matches("5678", ssar.getPassword())).isEqualTo(true);
+    }
+
+    @DisplayName("회원 정보 수정 - 인증 실패")
+    @Test
+    public void update_non_verify_test() throws Exception {
+        // given
+        UserRequest.UpdateInDTO updateInDTO = new UserRequest.UpdateInDTO();
+        updateInDTO.setUsername("archie");
+        updateInDTO.setPassword("5678");
+        String requestBody = om.writeValueAsString(updateInDTO);
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(post("/s/user")
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        log.info("responseBody={}", responseBody);
+
+        resultActions.andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.status").value(401))
+                .andExpect(jsonPath("$.msg").value("unAuthorized"))
+                .andExpect(jsonPath("$.data").value("인증되지 않았습니다"))
+                .andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @DisplayName("회원 정보 수정 실패 - 토큰은 유효하나 존재하지 않는 유저")
+    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void update_token_non_exist_user_test() throws Exception {
+        // given
+        User ssar = userRepository.findByEmail("ssar@nate.com").get();
+        String token = MyJwtProvider.create(ssar);
+        userRepository.delete(ssar);
+
+        UserRequest.UpdateInDTO updateInDTO = new UserRequest.UpdateInDTO();
+        updateInDTO.setUsername("archie");
+        updateInDTO.setPassword("5678");
+        String updateRequestBody = om.writeValueAsString(updateInDTO);
+
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(post("/s/user")
+                        .header("Authorization", "Bearer " + token)
+                        .content(updateRequestBody)
+                        .contentType(MediaType.APPLICATION_JSON));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        log.info("responseBody={}", responseBody);
+
+        resultActions.andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.status").value(401))
+                .andExpect(jsonPath("$.msg").value("unAuthorized"))
+                .andExpect(jsonPath("$.data").value("존재하지 않는 회원입니다."))
+                .andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @DisplayName("요청 결과 확인")
+    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void annual_duty_check_test() throws Exception {
+        // given
+        Map<String, List<Long>> requestData = new HashMap<>();
+        List<Long> adcIds = new ArrayList<>();
+
+        User userPS = userRepository.findByEmail("ssar@nate.com").get();
+        String token = MyJwtProvider.create(userPS);
+
+        for (int i = 0; i < 3; i++) {
+            AnnualDuty annualDuty = dummy.newADWithApproved(userPS);
+            AnnualDuty annualDutyPS = annualDutyRepository.save(annualDuty);
+            AnnualDutyChecked annualDutyChecked = annualDutyCheckedRepository.save(dummy.newADC(annualDutyPS));
+            adcIds.add(annualDutyChecked.getId());
+        }
+        requestData.put("updateRequestLogList", adcIds);
+        String requestBody = om.writeValueAsString(requestData);
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(get("/s/user/annualDutyCheck")
+                        .header("Authorization", "Bearer " + token)
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+
+        // then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.msg").value("성공"))
+                .andExpect(jsonPath("$.data.length()").value(3))
+                .andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @DisplayName("요청 결과 확인 후 처리")
+    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void annualDutyCheckUpdate_test() throws Exception {
+        // given
+        Map<String, List<Long>> requestData = new HashMap<>();
+        List<Long> adcIds = new ArrayList<>();
+
+        User userPS = userRepository.findByEmail("ssar@nate.com").get();
+        String token = MyJwtProvider.create(userPS);
+
+        for (int i = 0; i < 3; i++) {
+            AnnualDuty annualDuty = dummy.newADWithApproved(userPS);
+            AnnualDuty annualDutyPS = annualDutyRepository.save(annualDuty);
+            AnnualDutyChecked annualDutyChecked = annualDutyCheckedRepository.save(dummy.newADC(annualDutyPS));
+            adcIds.add(annualDutyChecked.getId());
+        }
+        requestData.put("updateRequestLogList", adcIds);
+        String requestBody = om.writeValueAsString(requestData);
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(post("/s/user/annualDutyCheck")
+                        .header("Authorization", "Bearer " + token)
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+
+        // then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.msg").value("성공"))
+                .andExpect(jsonPath("$.data").isEmpty())
+                .andDo(MockMvcResultHandlers.print()).andDo(document);
+
+        for (Long adcId : adcIds) {
+            AnnualDutyChecked annualDutyChecked = annualDutyCheckedRepository.findById(adcId).get();
+            Assertions.assertThat(annualDutyChecked.getIsShown()).isTrue();
+        }
     }
 }

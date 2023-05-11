@@ -75,8 +75,8 @@ public class UserController {
             @RequestBody Map<String, List<Long>> requestData,
             @AuthenticationPrincipal MyUserDetails myUserDetails
     ) {
-        List<Long> updateRequestLogList = requestData.get("updateRequestLogList");
-        ResponseDTO<?> responseDTO = userService.요청결과확인(updateRequestLogList, myUserDetails);
+        List<Long> annualDutyCheckedList = requestData.get("updateRequestLogList");
+        ResponseDTO<?> responseDTO = userService.요청결과확인(annualDutyCheckedList, myUserDetails);
         return ResponseEntity.ok().body(responseDTO);
     }
 }
