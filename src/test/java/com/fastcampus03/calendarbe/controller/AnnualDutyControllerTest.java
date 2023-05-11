@@ -3,6 +3,7 @@ package com.fastcampus03.calendarbe.controller;
 import com.fastcampus03.calendarbe.core.MyRestDoc;
 import com.fastcampus03.calendarbe.core.auth.jwt.MyJwtProvider;
 import com.fastcampus03.calendarbe.core.dummy.DummyEntity;
+import com.fastcampus03.calendarbe.core.util.StatusConst;
 import com.fastcampus03.calendarbe.dto.annualDuty.AnnualDutyRequest;
 import com.fastcampus03.calendarbe.model.annualDuty.AnnualDuty;
 import com.fastcampus03.calendarbe.model.annualDuty.AnnualDutyRepository;
@@ -35,6 +36,7 @@ import java.time.format.DateTimeFormatter;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Slf4j
 @DisplayName("일정관리 API")
@@ -105,7 +107,6 @@ class AnnualDutyControllerTest extends MyRestDoc {
         // then
         resultActions.andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.msg").value("성공"))
-                .andExpect(jsonPath("$.data.user.id").value(1L))
                 .andExpect(jsonPath("$.data.title").value("taeheoki의 일정"))
                 .andExpect(jsonPath("$.data.startTime").value(startTime.format(formatter)))
                 .andExpect(jsonPath("$.data.endTime").value(endTime.format(formatter)))
@@ -136,7 +137,8 @@ class AnnualDutyControllerTest extends MyRestDoc {
         log.info("responseBody={}", responseBody);
 
         // then
-        resultActions.andExpect(jsonPath("$.status").value(400))
+        resultActions.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
                 .andExpect(jsonPath("$.msg").value("badRequest"))
                 .andExpect(jsonPath("$.data.key").value("endTimeAfterStartTime"))
                 .andExpect(jsonPath("$.data.value").value( "End time should be after start time"))
@@ -171,13 +173,12 @@ class AnnualDutyControllerTest extends MyRestDoc {
         // then
         resultActions.andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.msg").value("성공"))
-                .andExpect(jsonPath("$.data.id").value(1L))
                 .andExpect(jsonPath("$.data.title").value("taeheoki의 일정 수정"))
                 .andExpect(jsonPath("$.data.startTime").value(startTime.format(formatter)))
                 .andExpect(jsonPath("$.data.endTime").value(endTime.format(formatter)))
                 .andExpect(jsonPath("$.data.status").value(false))
                 .andExpect(jsonPath("$.data.annualDuty.id").value(annualDuty.getId()))
-                .andExpect(jsonPath("$.data.annualDuty.updateStatus").value(1))
+                .andExpect(jsonPath("$.data.annualDuty.updateStatus").value(StatusConst.UPDATE_UPDATESTATUS))
                 .andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 

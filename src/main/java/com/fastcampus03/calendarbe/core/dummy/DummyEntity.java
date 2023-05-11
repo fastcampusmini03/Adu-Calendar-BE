@@ -1,5 +1,6 @@
 package com.fastcampus03.calendarbe.core.dummy;
 
+import com.fastcampus03.calendarbe.core.util.StatusConst;
 import com.fastcampus03.calendarbe.model.annualDuty.AnnualDuty;
 import com.fastcampus03.calendarbe.model.annualDuty.AnnualDutyChecked;
 import com.fastcampus03.calendarbe.model.user.User;
@@ -24,7 +25,7 @@ public class DummyEntity {
                 .user(user)
                 .startTime(LocalDateTime.now())
                 .endTime(LocalDateTime.now().plusDays(5))
-                .status("0")
+                .status(StatusConst.APPROVING)
                 .type(true)
                 .title(user.getUsername() + "의 일정")
                 .build();
