@@ -36,7 +36,7 @@ public class AnnualDutyService {
     public ResponseDTO<?> 일정등록(AnnualDutyRequest.SaveInDTO saveDTO) {
         // 리팩토링 요소로 남겨둔다.
         User userPS = userRepository.findByEmail(saveDTO.getEmail())
-                .orElseThrow(() -> new Exception400("email", "등록되지 않은 유저입니다"));
+                .orElseThrow(() -> new Exception400("email", "등록되지 않은 유저입니다."));
         try {
             AnnualDuty annualDutyPS = annualDutyRepository.save(saveDTO.toEntity(userPS));
             return new ResponseDTO<>(annualDutyPS);
