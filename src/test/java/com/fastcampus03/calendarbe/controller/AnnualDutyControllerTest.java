@@ -294,7 +294,7 @@ class AnnualDutyControllerTest extends MyRestDoc {
                 .andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
-    @DisplayName("일정 삭제 요청 실패 - 존재하지 않는 일정 수정 요청")
+    @DisplayName("일정 삭제 요청 실패 - 존재하지 않는 일정 삭제 요청")
     @WithUserDetails(value = "taeheoki@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
     void deleteAnnualDuty_non_exist_test() throws Exception {
@@ -315,7 +315,7 @@ class AnnualDutyControllerTest extends MyRestDoc {
                 .andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
-    @DisplayName("일정 삭제 요청 실패 - 권한이 부여되지 않은 유저 수정 요청")
+    @DisplayName("일정 삭제 요청 실패 - 권한이 부여되지 않은 유저 삭청 요청")
     @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
     void deleteAnnualDuty_non_verify_test() throws Exception {
