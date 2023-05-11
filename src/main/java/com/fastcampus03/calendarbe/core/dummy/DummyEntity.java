@@ -1,6 +1,7 @@
 package com.fastcampus03.calendarbe.core.dummy;
 
 import com.fastcampus03.calendarbe.model.annualDuty.AnnualDuty;
+import com.fastcampus03.calendarbe.model.annualDuty.AnnualDutyChecked;
 import com.fastcampus03.calendarbe.model.user.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -29,6 +30,17 @@ public class DummyEntity {
                 .build();
     }
 
+    public AnnualDuty newADWithDuty(User user) {
+        return AnnualDuty.builder()
+                .user(user)
+                .startTime(LocalDateTime.now())
+                .endTime(LocalDateTime.now().plusDays(5))
+                .status("0")
+                .type(false)
+                .title(user.getUsername() + "의 일정")
+                .build();
+    }
+
     public AnnualDuty newADWithApproved(User user){
         return AnnualDuty.builder()
                 .user(user)
@@ -37,6 +49,14 @@ public class DummyEntity {
                 .status("1")
                 .type(true)
                 .title(user.getUsername() + "의 일정")
+                .build();
+    }
+
+    public AnnualDutyChecked newADC(AnnualDuty annualDuty){
+        return AnnualDutyChecked.builder()
+                .isShown(false)
+                .annualDuty(annualDuty)
+                .msg("일정 등록에 성공하였습니다.")
                 .build();
     }
 

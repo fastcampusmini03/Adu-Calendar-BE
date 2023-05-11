@@ -133,14 +133,14 @@ public class UserService {
 
 
     @Transactional
-    public ResponseDTO<?> 요청결과확인(List<Long> updateRequestLogList, MyUserDetails myUserDetails) {
+    public ResponseDTO<?> 요청결과확인(List<Long> annualDutyCheckedList, MyUserDetails myUserDetails) {
         // 현재 인증된 사용자의 정보를 가져옵니다.
         User user = myUserDetails.getUser();
         User userPS = userRepository.findById(user.getId()).orElseThrow(
                 () -> new Exception401("존재하지 않는 회원입니다.")
         );
 
-        for (Long id : updateRequestLogList){
+        for (Long id : annualDutyCheckedList){
             AnnualDutyChecked annualDutyCheckedPS = annualDutyCheckedRepository.findById(id).orElseThrow(
                     () -> new Exception401("존재하지 않는 일정입니다.")
             );
