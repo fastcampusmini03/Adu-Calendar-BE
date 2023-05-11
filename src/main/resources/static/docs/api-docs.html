@@ -436,20 +436,1827 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 @media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
 </style>
 </head>
-<body class="article">
+<body class="article toc2 toc-left">
 <div id="header">
 <h1>REST API</h1>
 <div class="details">
 <span id="revnumber">version 0.0.1-SNAPSHOT</span>
 </div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_유저_api">유저 API</a>
+<ul class="sectlevel2">
+<li><a href="#_회원가입_성공">회원가입 (성공)</a></li>
+<li><a href="#_회원가입_email_중복_실패">회원가입 (email 중복 실패)</a></li>
+<li><a href="#_회원가입_유효성_검사_email_형식_오류">회원가입 (유효성 검사 email 형식 오류)</a></li>
+<li><a href="#_로그인_성공">로그인 (성공)</a></li>
+<li><a href="#_로그인_인증_실패">로그인 (인증 실패)</a></li>
+<li><a href="#_회원상세보기_성공">회원상세보기 (성공)</a></li>
+<li><a href="#_회원상세보기_인증_안됨_실패">회원상세보기 (인증 안됨 실패)</a></li>
+<li><a href="#_회원_정보_수정_성공">회원 정보 수정 (성공)</a></li>
+<li><a href="#_회원_정보_수정_인증_실패">회원 정보 수정 (인증 실패)</a></li>
+<li><a href="#_회원_정보_수정_토큰은_있으나_존재하지_않는_유저_실패">회원 정보 수정 (토큰은 있으나 존재하지 않는 유저 실패)</a></li>
+<li><a href="#_일정_관련_요청_결과_확인_성공">일정 관련 요청 결과 확인 (성공)</a></li>
+<li><a href="#_일정_관련_요청_결과_확인_후_처리_성공">일정 관련 요청 결과 확인 후 처리 (성공)</a></li>
+</ul>
+</li>
+<li><a href="#_개인연차당직_api">개인연차/당직 API</a>
+<ul class="sectlevel2">
+<li><a href="#_일정_등록_요청_성공">일정 등록 요청 (성공)</a></li>
+<li><a href="#_일정_등록_요청_실패_일정_종료가_시작보다_빠름">일정 등록 요청 (실패 - 일정 종료가 시작보다 빠름)</a></li>
+<li><a href="#_일정_수정_요청_성공">일정 수정 요청 (성공)</a></li>
+<li><a href="#_일정_수정_요청_실패_일정_종료가_시작보다_빠름">일정 수정 요청 (실패 - 일정 종료가 시작보다 빠름)</a></li>
+<li><a href="#_일정_수정_요청_실패_존재하지_않는_일정_수정_요청">일정 수정 요청 (실패 - 존재하지 않는 일정 수정 요청)</a></li>
+<li><a href="#_일정_수정_요청_실패_권한이_부여되지_않은_유저_수정_요청">일정 수정 요청 (실패 - 권한이 부여되지 않은 유저 수정 요청)</a></li>
+<li><a href="#_일정_삭제_요청_성공">일정 삭제 요청 (성공)</a></li>
+<li><a href="#_일정_삭제_요청_실패_존재하지_않는_일정_삭제_요제">일정 삭제 요청 (실패 - 존재하지 않는 일정 삭제 요제)</a></li>
+<li><a href="#_일정_삭제_요청_실패_권한이_부여되지_않은_유저_삭제_요">일정 삭제 요청 (실패 - 권한이 부여되지 않은 유저 삭제 요)</a></li>
+<li><a href="#_일정_조회_요청_토큰_x">일정 조회 요청 (토큰 X)</a></li>
+<li><a href="#_일정_조회_요청_유저_토큰">일정 조회 요청 (유저 토큰)</a></li>
+<li><a href="#_일정_조회_요청_관리자_토큰">일정 조회 요청 (관리자 토큰)</a></li>
+</ul>
+</li>
+</ul>
+</div>
 </div>
 <div id="content">
+<div class="sect1">
+<h2 id="_유저_api">유저 API</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_회원가입_성공">회원가입 (성공)</h3>
+<div class="sect4">
+<h5 id="_request_example">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /join HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Content-Length: 77
+Host: localhost:8080
 
+{
+  "email" : "love@nate.com",
+  "password" : "1234",
+  "username" : "love"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJVU0VSIiwiaWQiOjQsImV4cCI6MTY4Mzg4MjA1MX0.inLvoB_t0BbF77k3sU4_RY08h8aIejXoBh6-wdvmsFU3Q3avlk1N698FrXio9r5UWbN_S12jHw8HY3QJ-_3lTA
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 268
+
+{
+  "status" : 201,
+  "msg" : "성공",
+  "data" : {
+    "id" : 4,
+    "email" : "love@nate.com",
+    "username" : "love",
+    "role" : "USER",
+    "createdAt" : "2023-05-11T18:00:51.787195",
+    "updatedAt" : null,
+    "loggedInAt" : "2023-05-11T18:00:51.86329"
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/join' -i -X POST \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -d '{
+  "email" : "love@nate.com",
+  "password" : "1234",
+  "username" : "love"
+}'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_회원가입_email_중복_실패">회원가입 (email 중복 실패)</h3>
+<div class="sect4">
+<h5 id="_request_example_2">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /join HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Content-Length: 77
+Host: localhost:8080
+
+{
+  "email" : "ssar@nate.com",
+  "password" : "1234",
+  "username" : "ssar"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_2">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 129
+
+{
+  "status" : 400,
+  "msg" : "badRequest",
+  "data" : {
+    "key" : "email",
+    "value" : "이메일이 존재합니다."
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_2">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/join' -i -X POST \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -d '{
+  "email" : "ssar@nate.com",
+  "password" : "1234",
+  "username" : "ssar"
+}'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_회원가입_유효성_검사_email_형식_오류">회원가입 (유효성 검사 email 형식 오류)</h3>
+<div class="sect4">
+<h5 id="_request_example_3">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /join HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Content-Length: 76
+Host: localhost:8080
+
+{
+  "email" : "ssarnate.com",
+  "password" : "1234",
+  "username" : "ssar"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_3">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 141
+
+{
+  "status" : 400,
+  "msg" : "badRequest",
+  "data" : {
+    "key" : "email",
+    "value" : "이메일 형식으로 작성해주세요"
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_3">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/join' -i -X POST \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -d '{
+  "email" : "ssarnate.com",
+  "password" : "1234",
+  "username" : "ssar"
+}'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_로그인_성공">로그인 (성공)</h3>
+<div class="sect4">
+<h5 id="_request_example_4">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /login HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Content-Length: 54
+Host: localhost:8080
+
+{
+  "email" : "ssar@nate.com",
+  "password" : "1234"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_4">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJVU0VSIiwiaWQiOjEsImV4cCI6MTY4Mzg4MjA1MH0.uNf0YhYwW21TpLO1nEQw4Gy6L9ei5C4D0-9s4y2_As2N8XzuE8Gf3cie6om7xSr0J6xtkjtYqVm5MJutaT02JQ
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 269
+
+{
+  "status" : 200,
+  "msg" : "성공",
+  "data" : {
+    "id" : 1,
+    "email" : "ssar@nate.com",
+    "username" : "ssar",
+    "role" : "USER",
+    "createdAt" : "2023-05-11T18:00:50.063507",
+    "updatedAt" : null,
+    "loggedInAt" : "2023-05-11T18:00:50.369234"
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_4">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/login' -i -X POST \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -d '{
+  "email" : "ssar@nate.com",
+  "password" : "1234"
+}'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_로그인_인증_실패">로그인 (인증 실패)</h3>
+<div class="sect4">
+<h5 id="_request_example_5">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /login HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Content-Length: 44
+Host: localhost:8080
+
+{
+  "email" : null,
+  "password" : "12345"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_5">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 401 Unauthorized
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 89
+
+{
+  "status" : 401,
+  "msg" : "unAuthorized",
+  "data" : "인증되지 않았습니다"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_5">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/login' -i -X POST \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -d '{
+  "email" : null,
+  "password" : "12345"
+}'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_회원상세보기_성공">회원상세보기 (성공)</h3>
+<div class="sect4">
+<h5 id="_request_example_6">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /s/user HTTP/1.1
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_6">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 245
+
+{
+  "status" : 200,
+  "msg" : "성공",
+  "data" : {
+    "id" : 1,
+    "email" : "ssar@nate.com",
+    "username" : "ssar",
+    "role" : "USER",
+    "createdAt" : "2023-05-11T18:00:49.816074",
+    "updatedAt" : null,
+    "loggedInAt" : null
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_6">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/s/user' -i -X GET</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_회원상세보기_인증_안됨_실패">회원상세보기 (인증 안됨 실패)</h3>
+<div class="sect4">
+<h5 id="_request_example_7">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /s/user HTTP/1.1
+Host: localhost:8080</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /join HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Content-Length: 77
+Host: localhost:8080
+
+{
+  "email" : "love@nate.com",
+  "password" : "1234",
+  "username" : "love"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_7">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 401 Unauthorized
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json; charset=utf-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 89
+
+{
+  "status" : 401,
+  "msg" : "unAuthorized",
+  "data" : "인증되지 않았습니다"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_7">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/s/user' -i -X GET</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_회원_정보_수정_성공">회원 정보 수정 (성공)</h3>
+<div class="sect4">
+<h5 id="_request_example_8">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /s/user HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJVU0VSIiwiaWQiOjEsImV4cCI6MTY4Mzg4MjA1MX0.qbHJpCOlq-Y3p7oyq7h-paJe5GKl-jriZaLB5qAUmXdJHpnAq8ztFW6Ejg4GA5UpywFgLhxhdSiOaHdQtSFJXg
+Content-Length: 50
+Host: localhost:8080
+
+{
+  "password" : "5678",
+  "username" : "archie"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_8">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 247
+
+{
+  "status" : 200,
+  "msg" : "성공",
+  "data" : {
+    "id" : 1,
+    "email" : "ssar@nate.com",
+    "username" : "archie",
+    "role" : "USER",
+    "createdAt" : "2023-05-11T18:00:51.167839",
+    "updatedAt" : null,
+    "loggedInAt" : null
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_8">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/s/user' -i -X POST \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -H 'Authorization: Bearer Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJVU0VSIiwiaWQiOjEsImV4cCI6MTY4Mzg4MjA1MX0.qbHJpCOlq-Y3p7oyq7h-paJe5GKl-jriZaLB5qAUmXdJHpnAq8ztFW6Ejg4GA5UpywFgLhxhdSiOaHdQtSFJXg' \
+    -d '{
+  "password" : "5678",
+  "username" : "archie"
+}'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_회원_정보_수정_인증_실패">회원 정보 수정 (인증 실패)</h3>
+<div class="sect4">
+<h5 id="_request_example_9">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /s/user HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Content-Length: 50
+Host: localhost:8080
+
+{
+  "password" : "5678",
+  "username" : "archie"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_9">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 401 Unauthorized
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json; charset=utf-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 89
+
+{
+  "status" : 401,
+  "msg" : "unAuthorized",
+  "data" : "인증되지 않았습니다"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_9">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/s/user' -i -X POST \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -d '{
+  "password" : "5678",
+  "username" : "archie"
+}'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_회원_정보_수정_토큰은_있으나_존재하지_않는_유저_실패">회원 정보 수정 (토큰은 있으나 존재하지 않는 유저 실패)</h3>
+<div class="sect4">
+<h5 id="_request_example_10">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /s/user HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJVU0VSIiwiaWQiOjEsImV4cCI6MTY4Mzg4MjA1MX0.qbHJpCOlq-Y3p7oyq7h-paJe5GKl-jriZaLB5qAUmXdJHpnAq8ztFW6Ejg4GA5UpywFgLhxhdSiOaHdQtSFJXg
+Content-Length: 50
+Host: localhost:8080
+
+{
+  "password" : "5678",
+  "username" : "archie"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_10">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 247
+
+{
+  "status" : 200,
+  "msg" : "성공",
+  "data" : {
+    "id" : 1,
+    "email" : "ssar@nate.com",
+    "username" : "archie",
+    "role" : "USER",
+    "createdAt" : "2023-05-11T18:00:51.167839",
+    "updatedAt" : null,
+    "loggedInAt" : null
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_10">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/s/user' -i -X POST \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -H 'Authorization: Bearer Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJVU0VSIiwiaWQiOjEsImV4cCI6MTY4Mzg4MjA1MX0.qbHJpCOlq-Y3p7oyq7h-paJe5GKl-jriZaLB5qAUmXdJHpnAq8ztFW6Ejg4GA5UpywFgLhxhdSiOaHdQtSFJXg' \
+    -d '{
+  "password" : "5678",
+  "username" : "archie"
+}'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_일정_관련_요청_결과_확인_성공">일정 관련 요청 결과 확인 (성공)</h3>
+<div class="sect4">
+<h5 id="_request_example_11">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /s/user/annualDutyCheck HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJVU0VSIiwiaWQiOjEsImV4cCI6MTY4Mzg4MjA1Mn0.ork2zdGt9p3bo-8-ipkBG6I37LxMtZSkIpeY1e0cl64sDd8Mx7X21vnnbrhGEH8TwfaTM2wpnBPS4RISD4lWkw
+Content-Length: 42
+Host: localhost:8080
+
+{
+  "updateRequestLogList" : [ 4, 5, 6 ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_11">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 565
+
+{
+  "status" : 200,
+  "msg" : "성공",
+  "data" : [ {
+    "id" : 4,
+    "isShown" : false,
+    "msg" : "일정 등록에 성공하였습니다.",
+    "createdAt" : "2023-05-11T18:00:52.824764",
+    "updatedAt" : null
+  }, {
+    "id" : 5,
+    "isShown" : false,
+    "msg" : "일정 등록에 성공하였습니다.",
+    "createdAt" : "2023-05-11T18:00:52.825457",
+    "updatedAt" : null
+  }, {
+    "id" : 6,
+    "isShown" : false,
+    "msg" : "일정 등록에 성공하였습니다.",
+    "createdAt" : "2023-05-11T18:00:52.825916",
+    "updatedAt" : null
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_11">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/s/user/annualDutyCheck' -i -X GET \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -H 'Authorization: Bearer Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJVU0VSIiwiaWQiOjEsImV4cCI6MTY4Mzg4MjA1Mn0.ork2zdGt9p3bo-8-ipkBG6I37LxMtZSkIpeY1e0cl64sDd8Mx7X21vnnbrhGEH8TwfaTM2wpnBPS4RISD4lWkw' \
+    -d '{
+  "updateRequestLogList" : [ 4, 5, 6 ]
+}'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_일정_관련_요청_결과_확인_후_처리_성공">일정 관련 요청 결과 확인 후 처리 (성공)</h3>
+<div class="sect4">
+<h5 id="_request_example_12">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /s/user/annualDutyCheck HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJVU0VSIiwiaWQiOjEsImV4cCI6MTY4Mzg4MjA1Mn0.ork2zdGt9p3bo-8-ipkBG6I37LxMtZSkIpeY1e0cl64sDd8Mx7X21vnnbrhGEH8TwfaTM2wpnBPS4RISD4lWkw
+Content-Length: 42
+Host: localhost:8080
+
+{
+  "updateRequestLogList" : [ 1, 2, 3 ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_12">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 57
+
+{
+  "status" : 200,
+  "msg" : "성공",
+  "data" : null
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_12">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/s/user/annualDutyCheck' -i -X POST \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -H 'Authorization: Bearer Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJVU0VSIiwiaWQiOjEsImV4cCI6MTY4Mzg4MjA1Mn0.ork2zdGt9p3bo-8-ipkBG6I37LxMtZSkIpeY1e0cl64sDd8Mx7X21vnnbrhGEH8TwfaTM2wpnBPS4RISD4lWkw' \
+    -d '{
+  "updateRequestLogList" : [ 1, 2, 3 ]
+}'</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_개인연차당직_api">개인연차/당직 API</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_일정_등록_요청_성공">일정 등록 요청 (성공)</h3>
+<div class="sect4">
+<h5 id="_request_example_13">Request Example</h5>
+<div class="paragraph">
+<p>Unresolved directive in api-docs.adoc - include::./build/generated-snippets/{annualduty}/save_test/http-request.adoc[]</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_13">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 557
+
+{
+  "status" : 200,
+  "msg" : "성공",
+  "data" : {
+    "id" : 42,
+    "status" : "0",
+    "user" : {
+      "id" : 1,
+      "email" : "taeheoki@nate.com",
+      "username" : "taeheoki",
+      "role" : "USER",
+      "createdAt" : "2023-05-11T18:00:47.722129",
+      "updatedAt" : null,
+      "loggedInAt" : null
+    },
+    "title" : "taeheoki의 일정",
+    "startTime" : "2023-05-11T18:00:47",
+    "endTime" : "2023-05-16T18:00:47",
+    "type" : true,
+    "createdAt" : "2023-05-11T18:00:47.888721",
+    "updatedAt" : null,
+    "updateStatus" : null
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_13">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/s/user/annualDuty/save' -i -X POST \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -d '{
+  "calendarId" : "0",
+  "username" : "taeheoki",
+  "email" : "taeheoki@nate.com",
+  "title" : "taeheoki의 일정",
+  "start" : "2023-05-11T18:00:47",
+  "end" : "2023-05-16T18:00:47",
+  "isAllday" : true,
+  "role" : "USER",
+  "endTimeAfterStartTime" : true
+}'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_일정_등록_요청_실패_일정_종료가_시작보다_빠름">일정 등록 요청 (실패 - 일정 종료가 시작보다 빠름)</h3>
+<div class="sect4">
+<h5 id="_request_example_14">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /s/user/annualDuty/save HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Content-Length: 261
+Host: localhost:8080
+
+{
+  "calendarId" : "0",
+  "username" : "taeheoki",
+  "email" : "taeheoki@nate.com",
+  "title" : "taeheoki의 일정",
+  "start" : "2023-05-11T18:00:48",
+  "end" : "2023-05-06T18:00:48",
+  "isAllday" : true,
+  "role" : "USER",
+  "endTimeAfterStartTime" : false
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_14">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 151
+
+{
+  "status" : 400,
+  "msg" : "badRequest",
+  "data" : {
+    "key" : "endTimeAfterStartTime",
+    "value" : "End time should be after start time"
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_14">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/s/user/annualDuty/save' -i -X POST \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -d '{
+  "calendarId" : "0",
+  "username" : "taeheoki",
+  "email" : "taeheoki@nate.com",
+  "title" : "taeheoki의 일정",
+  "start" : "2023-05-11T18:00:48",
+  "end" : "2023-05-06T18:00:48",
+  "isAllday" : true,
+  "role" : "USER",
+  "endTimeAfterStartTime" : false
+}'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_일정_수정_요청_성공">일정 수정 요청 (성공)</h3>
+<div class="sect4">
+<h5 id="_request_example_15">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /s/user/annualDuty/update/102 HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Content-Length: 145
+Host: localhost:8080
+
+{
+  "title" : "taeheoki의 일정 수정",
+  "start" : "2023-05-11T18:00:49",
+  "end" : "2023-05-26T18:00:49",
+  "endTimeAfterStartTime" : true
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_15">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 614
+
+{
+  "status" : 200,
+  "msg" : "성공",
+  "data" : {
+    "id" : 1,
+    "annualDuty" : {
+      "id" : 102,
+      "status" : "1",
+      "title" : "taeheoki의 일정",
+      "startTime" : "2023-05-11T18:00:49.724346",
+      "endTime" : "2023-05-16T18:00:49.724392",
+      "type" : true,
+      "createdAt" : "2023-05-11T18:00:49.724461",
+      "updatedAt" : null,
+      "updateStatus" : 1
+    },
+    "title" : "taeheoki의 일정 수정",
+    "startTime" : "2023-05-11T18:00:49",
+    "endTime" : "2023-05-26T18:00:49",
+    "status" : false,
+    "createdAt" : "2023-05-11T18:00:49.727007",
+    "updatedAt" : null
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_15">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/s/user/annualDuty/update/102' -i -X POST \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -d '{
+  "title" : "taeheoki의 일정 수정",
+  "start" : "2023-05-11T18:00:49",
+  "end" : "2023-05-26T18:00:49",
+  "endTimeAfterStartTime" : true
+}'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_일정_수정_요청_실패_일정_종료가_시작보다_빠름">일정 수정 요청 (실패 - 일정 종료가 시작보다 빠름)</h3>
+<div class="sect4">
+<h5 id="_request_example_16">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /s/user/annualDuty/update/51 HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Content-Length: 146
+Host: localhost:8080
+
+{
+  "title" : "taeheoki의 일정 수정",
+  "start" : "2023-05-11T18:00:48",
+  "end" : "2023-04-26T18:00:48",
+  "endTimeAfterStartTime" : false
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_16">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 151
+
+{
+  "status" : 400,
+  "msg" : "badRequest",
+  "data" : {
+    "key" : "endTimeAfterStartTime",
+    "value" : "End time should be after start time"
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_16">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/s/user/annualDuty/update/51' -i -X POST \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -d '{
+  "title" : "taeheoki의 일정 수정",
+  "start" : "2023-05-11T18:00:48",
+  "end" : "2023-04-26T18:00:48",
+  "endTimeAfterStartTime" : false
+}'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_일정_수정_요청_실패_존재하지_않는_일정_수정_요청">일정 수정 요청 (실패 - 존재하지 않는 일정 수정 요청)</h3>
+<div class="sect4">
+<h5 id="_request_example_17">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /s/user/annualDuty/update/9223372036854775807 HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Content-Length: 145
+Host: localhost:8080
+
+{
+  "title" : "taeheoki의 일정 수정",
+  "start" : "2023-05-11T18:00:47",
+  "end" : "2023-05-26T18:00:47",
+  "endTimeAfterStartTime" : true
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_17">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 133
+
+{
+  "status" : 400,
+  "msg" : "badRequest",
+  "data" : {
+    "key" : "id",
+    "value" : "존재하지 않는 일정입니다."
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_17">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/s/user/annualDuty/update/9223372036854775807' -i -X POST \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -d '{
+  "title" : "taeheoki의 일정 수정",
+  "start" : "2023-05-11T18:00:47",
+  "end" : "2023-05-26T18:00:47",
+  "endTimeAfterStartTime" : true
+}'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_일정_수정_요청_실패_권한이_부여되지_않은_유저_수정_요청">일정 수정 요청 (실패 - 권한이 부여되지 않은 유저 수정 요청)</h3>
+<div class="sect4">
+<h5 id="_request_example_18">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /s/user/annualDuty/update/17 HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Content-Length: 145
+Host: localhost:8080
+
+{
+  "title" : "taeheoki의 일정 수정",
+  "start" : "2023-05-11T18:00:47",
+  "end" : "2023-05-26T18:00:47",
+  "endTimeAfterStartTime" : true
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_18">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 401 Unauthorized
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 108
+
+{
+  "status" : 401,
+  "msg" : "unAuthorized",
+  "data" : "본인의 일정만 수정할 수 있습니다."
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_18">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/s/user/annualDuty/update/17' -i -X POST \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -d '{
+  "title" : "taeheoki의 일정 수정",
+  "start" : "2023-05-11T18:00:47",
+  "end" : "2023-05-26T18:00:47",
+  "endTimeAfterStartTime" : true
+}'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_일정_삭제_요청_성공">일정 삭제 요청 (성공)</h3>
+<div class="sect4">
+<h5 id="_request_example_19">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /s/user/annualDuty/delete/68 HTTP/1.1
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_19">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 57
+
+{
+  "status" : 200,
+  "msg" : "성공",
+  "data" : null
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_19">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/s/user/annualDuty/delete/68' -i -X POST</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_일정_삭제_요청_실패_존재하지_않는_일정_삭제_요제">일정 삭제 요청 (실패 - 존재하지 않는 일정 삭제 요제)</h3>
+<div class="sect4">
+<h5 id="_request_example_20">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /s/user/annualDuty/delete/9223372036854775807 HTTP/1.1
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_20">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 133
+
+{
+  "status" : 400,
+  "msg" : "badRequest",
+  "data" : {
+    "key" : "id",
+    "value" : "존재하지 않는 일정입니다."
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_20">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/s/user/annualDuty/delete/9223372036854775807' -i -X POST</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_일정_삭제_요청_실패_권한이_부여되지_않은_유저_삭제_요">일정 삭제 요청 (실패 - 권한이 부여되지 않은 유저 삭제 요)</h3>
+<div class="sect4">
+<h5 id="_request_example_21">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /s/user/annualDuty/delete/93 HTTP/1.1
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_21">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 401 Unauthorized
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 108
+
+{
+  "status" : 401,
+  "msg" : "unAuthorized",
+  "data" : "본인의 일정만 수정할 수 있습니다."
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_21">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/s/user/annualDuty/delete/93' -i -X POST</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_일정_조회_요청_토큰_x">일정 조회 요청 (토큰 X)</h3>
+<div class="sect4">
+<h5 id="_request_example_22">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /annualDuty/?year=2023&amp;month=5 HTTP/1.1
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_22">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 2133
+
+{
+  "status" : 200,
+  "msg" : "성공",
+  "data" : [ {
+    "id" : 27,
+    "status" : "1",
+    "user" : {
+      "id" : 1,
+      "email" : "taeheoki@nate.com",
+      "username" : "taeheoki",
+      "role" : "USER",
+      "createdAt" : "2023-05-11T18:00:47.471773",
+      "updatedAt" : null,
+      "loggedInAt" : null
+    },
+    "title" : "taeheoki의 일정",
+    "startTime" : "2023-05-11T18:00:47.626465",
+    "endTime" : "2023-05-16T18:00:47.62647",
+    "type" : true,
+    "createdAt" : "2023-05-11T18:00:47.626518",
+    "updatedAt" : null,
+    "updateStatus" : null
+  }, {
+    "id" : 29,
+    "status" : "1",
+    "user" : {
+      "id" : 1,
+      "email" : "taeheoki@nate.com",
+      "username" : "taeheoki",
+      "role" : "USER",
+      "createdAt" : "2023-05-11T18:00:47.471773",
+      "updatedAt" : null,
+      "loggedInAt" : null
+    },
+    "title" : "taeheoki의 일정",
+    "startTime" : "2023-05-11T18:00:47.627831",
+    "endTime" : "2023-05-16T18:00:47.627837",
+    "type" : true,
+    "createdAt" : "2023-05-11T18:00:47.627921",
+    "updatedAt" : null,
+    "updateStatus" : null
+  }, {
+    "id" : 31,
+    "status" : "1",
+    "user" : {
+      "id" : 1,
+      "email" : "taeheoki@nate.com",
+      "username" : "taeheoki",
+      "role" : "USER",
+      "createdAt" : "2023-05-11T18:00:47.471773",
+      "updatedAt" : null,
+      "loggedInAt" : null
+    },
+    "title" : "taeheoki의 일정",
+    "startTime" : "2023-05-11T18:00:47.629125",
+    "endTime" : "2023-05-16T18:00:47.629129",
+    "type" : true,
+    "createdAt" : "2023-05-11T18:00:47.629177",
+    "updatedAt" : null,
+    "updateStatus" : null
+  }, {
+    "id" : 33,
+    "status" : "1",
+    "user" : {
+      "id" : 1,
+      "email" : "taeheoki@nate.com",
+      "username" : "taeheoki",
+      "role" : "USER",
+      "createdAt" : "2023-05-11T18:00:47.471773",
+      "updatedAt" : null,
+      "loggedInAt" : null
+    },
+    "title" : "taeheoki의 일정",
+    "startTime" : "2023-05-11T18:00:47.630161",
+    "endTime" : "2023-05-16T18:00:47.630165",
+    "type" : true,
+    "createdAt" : "2023-05-11T18:00:47.63021",
+    "updatedAt" : null,
+    "updateStatus" : null
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_22">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/annualDuty/?year=2023&amp;month=5' -i -X GET</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_일정_조회_요청_유저_토큰">일정 조회 요청 (유저 토큰)</h3>
+<div class="sect4">
+<h5 id="_request_example_23">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /annualDuty/?year=2023&amp;month=5 HTTP/1.1
+Authorization: Bearer Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJVU0VSIiwiaWQiOjIsImV4cCI6MTY4Mzg4MjA0OH0.CJAljJDZKyu86KDDvJ-hGwN8kUtkMkUf0zHoqz5byj59cukNjUIBR9qq1PgKg_zMQZIAfCPYll-Q2vgapO_kdg
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_23">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 3146
+
+{
+  "status" : 200,
+  "msg" : "성공",
+  "data" : [ {
+    "id" : 70,
+    "status" : "1",
+    "user" : {
+      "id" : 1,
+      "email" : "taeheoki@nate.com",
+      "username" : "taeheoki",
+      "role" : "USER",
+      "createdAt" : "2023-05-11T18:00:48.75799",
+      "updatedAt" : null,
+      "loggedInAt" : null
+    },
+    "title" : "taeheoki의 일정",
+    "startTime" : "2023-05-11T18:00:48.919942",
+    "endTime" : "2023-05-16T18:00:48.919946",
+    "type" : true,
+    "createdAt" : "2023-05-11T18:00:48.920001",
+    "updatedAt" : null,
+    "updateStatus" : null
+  }, {
+    "id" : 71,
+    "status" : "0",
+    "user" : {
+      "id" : 2,
+      "email" : "ssar@nate.com",
+      "username" : "ssar",
+      "role" : "USER",
+      "createdAt" : "2023-05-11T18:00:48.837081",
+      "updatedAt" : null,
+      "loggedInAt" : null
+    },
+    "title" : "ssar의 일정",
+    "startTime" : "2023-05-11T18:00:48.92072",
+    "endTime" : "2023-05-16T18:00:48.920724",
+    "type" : true,
+    "createdAt" : "2023-05-11T18:00:48.920925",
+    "updatedAt" : null,
+    "updateStatus" : null
+  }, {
+    "id" : 72,
+    "status" : "1",
+    "user" : {
+      "id" : 1,
+      "email" : "taeheoki@nate.com",
+      "username" : "taeheoki",
+      "role" : "USER",
+      "createdAt" : "2023-05-11T18:00:48.75799",
+      "updatedAt" : null,
+      "loggedInAt" : null
+    },
+    "title" : "taeheoki의 일정",
+    "startTime" : "2023-05-11T18:00:48.921391",
+    "endTime" : "2023-05-16T18:00:48.921396",
+    "type" : true,
+    "createdAt" : "2023-05-11T18:00:48.921461",
+    "updatedAt" : null,
+    "updateStatus" : null
+  }, {
+    "id" : 74,
+    "status" : "1",
+    "user" : {
+      "id" : 1,
+      "email" : "taeheoki@nate.com",
+      "username" : "taeheoki",
+      "role" : "USER",
+      "createdAt" : "2023-05-11T18:00:48.75799",
+      "updatedAt" : null,
+      "loggedInAt" : null
+    },
+    "title" : "taeheoki의 일정",
+    "startTime" : "2023-05-11T18:00:48.922335",
+    "endTime" : "2023-05-16T18:00:48.922339",
+    "type" : true,
+    "createdAt" : "2023-05-11T18:00:48.922383",
+    "updatedAt" : null,
+    "updateStatus" : null
+  }, {
+    "id" : 75,
+    "status" : "0",
+    "user" : {
+      "id" : 2,
+      "email" : "ssar@nate.com",
+      "username" : "ssar",
+      "role" : "USER",
+      "createdAt" : "2023-05-11T18:00:48.837081",
+      "updatedAt" : null,
+      "loggedInAt" : null
+    },
+    "title" : "ssar의 일정",
+    "startTime" : "2023-05-11T18:00:48.922871",
+    "endTime" : "2023-05-16T18:00:48.922876",
+    "type" : true,
+    "createdAt" : "2023-05-11T18:00:48.922936",
+    "updatedAt" : null,
+    "updateStatus" : null
+  }, {
+    "id" : 76,
+    "status" : "1",
+    "user" : {
+      "id" : 1,
+      "email" : "taeheoki@nate.com",
+      "username" : "taeheoki",
+      "role" : "USER",
+      "createdAt" : "2023-05-11T18:00:48.75799",
+      "updatedAt" : null,
+      "loggedInAt" : null
+    },
+    "title" : "taeheoki의 일정",
+    "startTime" : "2023-05-11T18:00:48.923652",
+    "endTime" : "2023-05-16T18:00:48.923656",
+    "type" : true,
+    "createdAt" : "2023-05-11T18:00:48.923971",
+    "updatedAt" : null,
+    "updateStatus" : null
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_23">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/annualDuty/?year=2023&amp;month=5' -i -X GET \
+    -H 'Authorization: Bearer Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJVU0VSIiwiaWQiOjIsImV4cCI6MTY4Mzg4MjA0OH0.CJAljJDZKyu86KDDvJ-hGwN8kUtkMkUf0zHoqz5byj59cukNjUIBR9qq1PgKg_zMQZIAfCPYll-Q2vgapO_kdg'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_일정_조회_요청_관리자_토큰">일정 조회 요청 (관리자 토큰)</h3>
+<div class="sect4">
+<h5 id="_request_example_24">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /annualDuty/?year=2023&amp;month=5 HTTP/1.1
+Authorization: Bearer Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJBRE1JTiIsImlkIjozLCJleHAiOjE2ODM4ODIwNDZ9.GGKNPpU6u_yanUZbSPoCHoDLsZFpP5o6QWT_BfECgvCl3CtrZ4oAT00ceL-OVdYepYq6SDI2ANC6Ax-CFXdp-w
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_24">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 4178
+
+{
+  "status" : 200,
+  "msg" : "성공",
+  "data" : [ {
+    "id" : 1,
+    "status" : "0",
+    "user" : {
+      "id" : 1,
+      "email" : "taeheoki@nate.com",
+      "username" : "taeheoki",
+      "role" : "USER",
+      "createdAt" : "2023-05-11T18:00:46.544829",
+      "updatedAt" : null,
+      "loggedInAt" : null
+    },
+    "title" : "taeheoki의 일정",
+    "startTime" : "2023-05-11T18:00:46.7011",
+    "endTime" : "2023-05-16T18:00:46.70111",
+    "type" : true,
+    "createdAt" : "2023-05-11T18:00:46.702019",
+    "updatedAt" : null,
+    "updateStatus" : null
+  }, {
+    "id" : 2,
+    "status" : "1",
+    "user" : {
+      "id" : 1,
+      "email" : "taeheoki@nate.com",
+      "username" : "taeheoki",
+      "role" : "USER",
+      "createdAt" : "2023-05-11T18:00:46.544829",
+      "updatedAt" : null,
+      "loggedInAt" : null
+    },
+    "title" : "taeheoki의 일정",
+    "startTime" : "2023-05-11T18:00:46.703439",
+    "endTime" : "2023-05-16T18:00:46.703445",
+    "type" : true,
+    "createdAt" : "2023-05-11T18:00:46.703532",
+    "updatedAt" : null,
+    "updateStatus" : null
+  }, {
+    "id" : 3,
+    "status" : "0",
+    "user" : {
+      "id" : 2,
+      "email" : "ssar@nate.com",
+      "username" : "ssar",
+      "role" : "USER",
+      "createdAt" : "2023-05-11T18:00:46.623286",
+      "updatedAt" : null,
+      "loggedInAt" : null
+    },
+    "title" : "ssar의 일정",
+    "startTime" : "2023-05-11T18:00:46.704158",
+    "endTime" : "2023-05-16T18:00:46.704162",
+    "type" : true,
+    "createdAt" : "2023-05-11T18:00:46.704215",
+    "updatedAt" : null,
+    "updateStatus" : null
+  }, {
+    "id" : 4,
+    "status" : "1",
+    "user" : {
+      "id" : 1,
+      "email" : "taeheoki@nate.com",
+      "username" : "taeheoki",
+      "role" : "USER",
+      "createdAt" : "2023-05-11T18:00:46.544829",
+      "updatedAt" : null,
+      "loggedInAt" : null
+    },
+    "title" : "taeheoki의 일정",
+    "startTime" : "2023-05-11T18:00:46.705114",
+    "endTime" : "2023-05-16T18:00:46.705121",
+    "type" : true,
+    "createdAt" : "2023-05-11T18:00:46.705219",
+    "updatedAt" : null,
+    "updateStatus" : null
+  }, {
+    "id" : 5,
+    "status" : "0",
+    "user" : {
+      "id" : 1,
+      "email" : "taeheoki@nate.com",
+      "username" : "taeheoki",
+      "role" : "USER",
+      "createdAt" : "2023-05-11T18:00:46.544829",
+      "updatedAt" : null,
+      "loggedInAt" : null
+    },
+    "title" : "taeheoki의 일정",
+    "startTime" : "2023-05-11T18:00:46.705997",
+    "endTime" : "2023-05-16T18:00:46.706002",
+    "type" : true,
+    "createdAt" : "2023-05-11T18:00:46.706055",
+    "updatedAt" : null,
+    "updateStatus" : null
+  }, {
+    "id" : 6,
+    "status" : "1",
+    "user" : {
+      "id" : 1,
+      "email" : "taeheoki@nate.com",
+      "username" : "taeheoki",
+      "role" : "USER",
+      "createdAt" : "2023-05-11T18:00:46.544829",
+      "updatedAt" : null,
+      "loggedInAt" : null
+    },
+    "title" : "taeheoki의 일정",
+    "startTime" : "2023-05-11T18:00:46.706725",
+    "endTime" : "2023-05-16T18:00:46.70673",
+    "type" : true,
+    "createdAt" : "2023-05-11T18:00:46.706785",
+    "updatedAt" : null,
+    "updateStatus" : null
+  }, {
+    "id" : 7,
+    "status" : "0",
+    "user" : {
+      "id" : 2,
+      "email" : "ssar@nate.com",
+      "username" : "ssar",
+      "role" : "USER",
+      "createdAt" : "2023-05-11T18:00:46.623286",
+      "updatedAt" : null,
+      "loggedInAt" : null
+    },
+    "title" : "ssar의 일정",
+    "startTime" : "2023-05-11T18:00:46.707626",
+    "endTime" : "2023-05-16T18:00:46.707631",
+    "type" : true,
+    "createdAt" : "2023-05-11T18:00:46.707689",
+    "updatedAt" : null,
+    "updateStatus" : null
+  }, {
+    "id" : 8,
+    "status" : "1",
+    "user" : {
+      "id" : 1,
+      "email" : "taeheoki@nate.com",
+      "username" : "taeheoki",
+      "role" : "USER",
+      "createdAt" : "2023-05-11T18:00:46.544829",
+      "updatedAt" : null,
+      "loggedInAt" : null
+    },
+    "title" : "taeheoki의 일정",
+    "startTime" : "2023-05-11T18:00:46.70856",
+    "endTime" : "2023-05-16T18:00:46.708565",
+    "type" : true,
+    "createdAt" : "2023-05-11T18:00:46.708613",
+    "updatedAt" : null,
+    "updateStatus" : null
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_24">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/annualDuty/?year=2023&amp;month=5' -i -X GET \
+    -H 'Authorization: Bearer Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJBRE1JTiIsImlkIjozLCJleHAiOjE2ODM4ODIwNDZ9.GGKNPpU6u_yanUZbSPoCHoDLsZFpP5o6QWT_BfECgvCl3CtrZ4oAT00ceL-OVdYepYq6SDI2ANC6Ax-CFXdp-w'</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-05-09 20:05:15 +0900
+Last updated 2023-05-11 18:00:41 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
