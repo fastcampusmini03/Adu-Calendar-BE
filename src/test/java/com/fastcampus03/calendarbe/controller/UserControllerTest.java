@@ -440,6 +440,7 @@ public class UserControllerTest extends MyRestDoc {
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
 
         // then
         resultActions.andExpect(status().isOk())
@@ -476,7 +477,6 @@ public class UserControllerTest extends MyRestDoc {
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-
         // then
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(200))
