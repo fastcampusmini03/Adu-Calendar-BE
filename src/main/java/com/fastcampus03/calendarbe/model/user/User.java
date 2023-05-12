@@ -2,6 +2,8 @@ package com.fastcampus03.calendarbe.model.user;
 
 import com.fastcampus03.calendarbe.core.util.TimeBaseEntity;
 import com.fastcampus03.calendarbe.dto.admin.AdminResponse;
+import com.fastcampus03.calendarbe.dto.annualDuty.AnnualDutyResponse;
+import com.fastcampus03.calendarbe.dto.user.UserResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -113,4 +115,85 @@ public class User extends TimeBaseEntity {
                 .role(role)
                 .build();
     }
+
+    public UserResponse.LoginOutDTO toLoinOutDTO() {
+        return UserResponse.LoginOutDTO
+                .builder()
+                .id(id)
+                .email(email)
+                .username(username)
+                .role(role)
+                .build();
+    }
+
+    public UserResponse.JoinOutDTO toJoinOutDTO() {
+        return UserResponse.JoinOutDTO
+                .builder()
+                .id(id)
+                .email(email)
+                .username(username)
+                .role(role)
+                .build();
+    }
+
+    public UserResponse.UserInfoDTO toUserInfoDTO() {
+        return UserResponse.UserInfoDTO
+                .builder()
+                .id(id)
+                .email(email)
+                .username(username)
+                .role(role)
+                .build();
+    }
+
+    public UserResponse.UpdateDTO toUpdateDTO() {
+        return UserResponse.UpdateDTO
+                .builder()
+                .id(id)
+                .email(email)
+                .username(username)
+                .role(role)
+                .build();
+    }
+
+    public UserResponse.AnnualDutyCheckOutDTO.AnnualDutyAnnualDutyCheckOutDTO.UserAnnualDutyAnnualDutyCheckOutDTO toUserAnnualDutyAnnualDutyCheckOutDTO() {
+        return UserResponse.AnnualDutyCheckOutDTO.AnnualDutyAnnualDutyCheckOutDTO.UserAnnualDutyAnnualDutyCheckOutDTO
+                .builder()
+                .id(id)
+                .email(email)
+                .username(username)
+                .role(role)
+                .build();
+    }
+
+    public AnnualDutyResponse.SaveOutDTO.UserSaveOutDTO toUserSaveOutDTO() {
+        return AnnualDutyResponse.SaveOutDTO.UserSaveOutDTO
+                .builder()
+                .id(id)
+                .email(email)
+                .username(username)
+                .role(role)
+                .build();
+    }
+
+    public AnnualDutyResponse.UpdateAnnualDutyOutDTO.AnnualDutyUpdateAnnualDutyOutDTO.UserAnnualDutyUpdateAnnualDutyOutDTO toUserAnnualDutyUpdateAnnualDutyOutDTO() {
+        return AnnualDutyResponse.UpdateAnnualDutyOutDTO.AnnualDutyUpdateAnnualDutyOutDTO.UserAnnualDutyUpdateAnnualDutyOutDTO
+                .builder()
+                .id(id)
+                .email(email)
+                .username(username)
+                .role(role)
+                .build();
+    }
+
+    public AnnualDutyResponse.ShowAnnualDutyListOutDTO.UserShowAnnualDutyListOutDTO toUserShowAnnualDutyListOutDTO() {
+        return AnnualDutyResponse.ShowAnnualDutyListOutDTO.UserShowAnnualDutyListOutDTO
+                .builder()
+                .id(id)
+                .email(email)
+                .username(username)
+                .role(role)
+                .build();
+    }
+
 }

@@ -4,6 +4,7 @@ import com.fastcampus03.calendarbe.core.auth.jwt.MyJwtProvider;
 import com.fastcampus03.calendarbe.core.auth.session.MyUserDetails;
 import com.fastcampus03.calendarbe.dto.ResponseDTO;
 import com.fastcampus03.calendarbe.dto.user.UserRequest;
+import com.fastcampus03.calendarbe.dto.user.UserResponse;
 import com.fastcampus03.calendarbe.model.annualDuty.AnnualDutyChecked;
 import com.fastcampus03.calendarbe.model.log.update.UpdateRequestLog;
 import com.fastcampus03.calendarbe.model.user.User;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -31,7 +33,8 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserRequest.LoginInDTO loginInDTO, HttpServletRequest request) {
         Map<String, Object> responseData = userService.로그인(loginInDTO, request);
-        ResponseDTO<?> responseDTO = new ResponseDTO<>(responseData.get("loginUser"));
+        User user = (User) responseData.get("loginUser");
+        ResponseDTO<?> responseDTO = new ResponseDTO<>(user.toLoinOutDTO());
         return ResponseEntity.ok().header(MyJwtProvider.HEADER, (String) responseData.get("jwt")).body(responseDTO);
     }
 
@@ -41,7 +44,8 @@ public class UserController {
             Errors errors,
             HttpServletRequest request) {
         Map<String, Object> responseData = userService.회원가입(joinInDTO, request);
-        ResponseDTO<?> responseDTO = new ResponseDTO<>(HttpStatus.CREATED, "성공", responseData.get("loginUser"));
+        User user = (User) responseData.get("loginUser");
+        ResponseDTO<?> responseDTO = new ResponseDTO<>(HttpStatus.CREATED, "성공", user.toJoinOutDTO());
         return ResponseEntity.created(null).header(MyJwtProvider.HEADER, (String) responseData.get("jwt")).body(responseDTO);
     }
 
@@ -50,7 +54,7 @@ public class UserController {
             @AuthenticationPrincipal MyUserDetails myUserDetails
     ) {
         User user = userService.회원정보보기(myUserDetails);
-        ResponseDTO<?> responseDTO = new ResponseDTO<>(user);
+        ResponseDTO<?> responseDTO = new ResponseDTO<>(user.toUserInfoDTO());
         return ResponseEntity.ok().body(responseDTO);
     }
 
@@ -60,8 +64,8 @@ public class UserController {
             Errors errors,
             @AuthenticationPrincipal MyUserDetails myUserDetails
     ) {
-        User updatedUser = userService.회원정보수정(updateInDTO, myUserDetails);
-        ResponseDTO<?> responseDTO = new ResponseDTO<>(updatedUser);
+        User user = userService.회원정보수정(updateInDTO, myUserDetails);
+        ResponseDTO<?> responseDTO = new ResponseDTO<>(user.toUpdateDTO());
         return ResponseEntity.ok().body(responseDTO);
     }
 
@@ -70,7 +74,9 @@ public class UserController {
             @AuthenticationPrincipal MyUserDetails myUserDetails
     ) {
         List<AnnualDutyChecked> annualDutyCheckedList = userService.요청결과확인조회(myUserDetails);
-        ResponseDTO<?> responseDTO = new ResponseDTO<>(annualDutyCheckedList);
+        List<UserResponse.AnnualDutyCheckOutDTO> annualDutyCheckOutDTOList
+                = annualDutyCheckedList.stream().map(o -> o.toAnnualDutyCheckOutDTO()).collect(Collectors.toList());
+        ResponseDTO<?> responseDTO = new ResponseDTO<>(annualDutyCheckOutDTOList);
         return ResponseEntity.ok().body(responseDTO);
     }
 
@@ -81,6 +87,7 @@ public class UserController {
     ) {
         List<Long> annualDutyCheckedList = requestData.get("annualDutyCheckedList");
         userService.요청결과확인(annualDutyCheckedList, myUserDetails);
-        return ResponseEntity.ok().body(null);
+        ResponseDTO<?> responseDTO = new ResponseDTO<>(null);
+        return ResponseEntity.ok().body(responseDTO);
     }
 }

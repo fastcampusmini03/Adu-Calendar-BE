@@ -4,6 +4,7 @@ import com.fastcampus03.calendarbe.core.auth.jwt.MyJwtProvider;
 import com.fastcampus03.calendarbe.core.auth.session.MyUserDetails;
 import com.fastcampus03.calendarbe.dto.ResponseDTO;
 import com.fastcampus03.calendarbe.dto.annualDuty.AnnualDutyRequest;
+import com.fastcampus03.calendarbe.dto.annualDuty.AnnualDutyResponse;
 import com.fastcampus03.calendarbe.model.annualDuty.AnnualDuty;
 import com.fastcampus03.calendarbe.model.log.update.UpdateRequestLog;
 import com.fastcampus03.calendarbe.service.AnnualDutyService;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -30,7 +33,8 @@ public class AnnualDutyController {
             @RequestBody @Valid AnnualDutyRequest.SaveInDTO saveInDTO,
             Errors errors
     ){
-        ResponseDTO<?> responseDTO = annualDutyService.일정등록(saveInDTO);
+        AnnualDuty annualDuty = annualDutyService.일정등록(saveInDTO);
+        ResponseDTO<?> responseDTO = new ResponseDTO<>(annualDuty.toSaveOutDTO());
         return ResponseEntity.ok().body(responseDTO);
     }
 
@@ -41,7 +45,8 @@ public class AnnualDutyController {
             Errors errors,
             @AuthenticationPrincipal MyUserDetails myUserDetails) {
 
-        ResponseDTO<?> responseDTO = annualDutyService.일정수정(id, updateInDTO, myUserDetails);
+        UpdateRequestLog updateRequestLog = annualDutyService.일정수정(id, updateInDTO, myUserDetails);
+        ResponseDTO<?> responseDTO = new ResponseDTO<>(updateRequestLog.toUpdateAnnualDutyOutDTO());
         return ResponseEntity.ok().body(responseDTO);
     }
 
@@ -50,7 +55,8 @@ public class AnnualDutyController {
             @PathVariable("id") Long id,
             @AuthenticationPrincipal MyUserDetails myUserDetails) {
 
-        ResponseDTO<?> responseDTO = annualDutyService.일정삭제(id, myUserDetails);
+        annualDutyService.일정삭제(id, myUserDetails);
+        ResponseDTO<?> responseDTO = new ResponseDTO<>(null);
         return ResponseEntity.ok().body(responseDTO);
     }
 
@@ -60,7 +66,10 @@ public class AnnualDutyController {
         LocalDateTime endDate = LocalDateTime.of(year, month+1, 15, 23, 59, 59);
         String prefixJwt = request.getHeader(MyJwtProvider.HEADER);
 
-        ResponseDTO<?> responseDTO = annualDutyService.일정조회(startDate, endDate, prefixJwt);
+        List<AnnualDuty> annualDutyList = annualDutyService.일정조회(startDate, endDate, prefixJwt);
+        List<AnnualDutyResponse.ShowAnnualDutyListOutDTO> showAnnualDutyListOutDTOList
+                = annualDutyList.stream().map(o -> o.toShowAnnualDutyListOutDTO()).collect(Collectors.toList());
+        ResponseDTO<?> responseDTO = new ResponseDTO<>(showAnnualDutyListOutDTOList);
         return ResponseEntity.ok().body(responseDTO);
     }
 
