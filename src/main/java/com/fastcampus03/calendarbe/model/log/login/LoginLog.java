@@ -1,5 +1,6 @@
 package com.fastcampus03.calendarbe.model.log.login;
 
+import com.fastcampus03.calendarbe.core.util.TimeBaseEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @Table(name = "login_log_tb")
 @Entity
-public class LoginLog {
+public class LoginLog extends TimeBaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,20 +22,6 @@ public class LoginLog {
     private Long userId;
     private String userAgent;
     private String clientIP;
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
 
     @Builder
     public LoginLog(Long id, Long userId, String userAgent, String clientIP, LocalDateTime createdAt) {
@@ -42,6 +29,5 @@ public class LoginLog {
         this.userId = userId;
         this.userAgent = userAgent;
         this.clientIP = clientIP;
-        this.createdAt = createdAt;
     }
 }

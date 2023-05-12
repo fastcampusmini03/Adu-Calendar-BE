@@ -1,5 +1,6 @@
 package com.fastcampus03.calendarbe.model.annualDuty;
 
+import com.fastcampus03.calendarbe.core.util.TimeBaseEntity;
 import com.fastcampus03.calendarbe.model.user.User;
 import com.fastcampus03.calendarbe.core.util.StatusConst;
 import lombok.*;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 @Table(name = "annual_duty_tb")
 @Entity
-public class AnnualDuty {
+public class AnnualDuty extends TimeBaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,10 +37,6 @@ public class AnnualDuty {
 
     @Column(nullable = false)
     private Boolean type; // false: 당직, true: 연차
-
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 
     private Integer updateStatus; // null: default, 1: 업데이트 요청, 2: 삭제 요청
 
@@ -73,13 +70,4 @@ public class AnnualDuty {
         this.updateStatus = StatusConst.UPDATE_DELETESTATUS;
     }
 
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
 }

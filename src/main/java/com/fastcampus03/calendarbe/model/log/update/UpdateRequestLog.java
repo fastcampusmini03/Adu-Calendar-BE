@@ -1,5 +1,6 @@
 package com.fastcampus03.calendarbe.model.log.update;
 
+import com.fastcampus03.calendarbe.core.util.TimeBaseEntity;
 import com.fastcampus03.calendarbe.model.annualDuty.AnnualDuty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @Table(name = "update_request_log_tb")
 @Entity
 @Builder
-public class UpdateRequestLog {
+public class UpdateRequestLog extends TimeBaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,19 +36,5 @@ public class UpdateRequestLog {
 
     @Column(nullable = false)
     private Boolean status; // true : 처리 후, false : 처리 전
-
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
 
 }

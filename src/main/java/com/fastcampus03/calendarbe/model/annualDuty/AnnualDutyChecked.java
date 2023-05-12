@@ -1,5 +1,6 @@
 package com.fastcampus03.calendarbe.model.annualDuty;
 
+import com.fastcampus03.calendarbe.core.util.TimeBaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor
 @Builder
-public class AnnualDutyChecked {
+public class AnnualDutyChecked extends TimeBaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,22 +29,8 @@ public class AnnualDutyChecked {
     @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     private AnnualDuty annualDuty;
-
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-
     public void afterUserCheck() {
         this.isShown = true;
     }
 
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
 }

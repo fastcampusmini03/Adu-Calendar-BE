@@ -1,7 +1,9 @@
 package com.fastcampus03.calendarbe.model.user;
 
+import com.fastcampus03.calendarbe.core.util.TimeBaseEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
@@ -14,7 +16,7 @@ import java.time.LocalDateTime;
 @Setter
 @Table(name = "user_tb")
 @Entity
-public class User {
+public class User extends TimeBaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,11 +34,6 @@ public class User {
 
     private String role;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
-
     private LocalDateTime loggedInAt;
 
     public void updateInfo(String password, String username) {
@@ -46,15 +43,5 @@ public class User {
 
     public void updateRole(String newRole) {
         this.role = newRole;
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
     }
 }

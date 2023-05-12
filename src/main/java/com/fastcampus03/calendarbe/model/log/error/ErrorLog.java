@@ -1,5 +1,6 @@
 package com.fastcampus03.calendarbe.model.log.error;
 
+import com.fastcampus03.calendarbe.core.util.TimeBaseEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @Table(name = "error_log_tb")
 @Entity
-public class ErrorLog {
+public class ErrorLog extends TimeBaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,25 +23,10 @@ public class ErrorLog {
     @Column(nullable = false)
     private Long userId;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
-
     @Builder
     public ErrorLog(Long id, String msg, Long userId, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.msg = msg;
         this.userId = userId;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 }

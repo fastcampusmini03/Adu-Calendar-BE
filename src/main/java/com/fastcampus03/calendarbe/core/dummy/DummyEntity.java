@@ -69,7 +69,6 @@ public class DummyEntity {
                 .password(passwordEncoder.encode("1234"))
                 .email(username+"@nate.com")
                 .role("USER")
-                .createdAt(LocalDateTime.now())
                 .build();
     }
 }
