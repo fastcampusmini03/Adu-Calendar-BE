@@ -4,6 +4,7 @@ endif::[]
 
 :user: user-controller-test
 :annual_duty: annual-duty-controller-test
+:admin: admin-controller-test
 
 = REST API
 :toc: left
@@ -254,3 +255,255 @@ include::{snippets}/{annual_duty}/show-annual-duty-list_admin_token_test/http-re
 ===== Curl
 include::{snippets}/{annual_duty}/show-annual-duty-list_admin_token_test/curl-request.adoc[]
 
+
+
+== 관리자 API
+=== 유저 권한 변경 - 성공
+===== Request Example
+include::{snippets}/{admin}/update_role_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/update_role_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/update_role_test/curl-request.adoc[]
+
+=== 일정 등록 승인 - 성공
+===== Request Example
+include::{snippets}/{admin}/accept_save_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/accept_save_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/accept_save_test/curl-request.adoc[]
+
+=== 일정 등록 승인 - 인증 실패
+===== Request Example
+include::{snippets}/{admin}/accept_save_auth_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/accept_save_auth_fail_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/accept_save_auth_fail_test/curl-request.adoc[]
+
+=== 일정 등록 승인 - 유효한 토큰은 있으나 삭제된 유저일 경우
+===== Request Example
+include::{snippets}/{admin}/accept_save_non_exist_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/accept_save_non_exist_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/accept_save_non_exist_test/curl-request.adoc[]
+
+=== 일정 등록 거절 - 성공
+===== Request Example
+include::{snippets}/{admin}/accept_reject_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/accept_reject_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/accept_reject_test/curl-request.adoc[]
+
+=== 일정 등록 거절 - 인증 실패
+===== Request Example
+include::{snippets}/{admin}/accept_reject_auth_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/accept_reject_auth_fail_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/accept_reject_auth_fail_test/curl-request.adoc[]
+
+=== 일정 등록 거절 - 유효한 토큰은 있으나 삭제된 유저일 경우
+===== Request Example
+include::{snippets}/{admin}/accept_reject_non_exist_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/accept_reject_non_exist_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/accept_reject_non_exist_test/curl-request.adoc[]
+
+=== 일정 삭제 승인 - 성공
+===== Request Example
+include::{snippets}/{admin}/accept_delete_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/accept_delete_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/accept_delete_test/curl-request.adoc[]
+
+=== 일정 삭제 승인 - 인증 실패
+===== Request Example
+include::{snippets}/{admin}/accept_delete_auth_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/accept_delete_auth_fail_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/accept_delete_auth_fail_test/curl-request.adoc[]
+
+=== 일정 삭제 승인 - 유효한 토큰은 있으나 삭제된 유저일 경우
+===== Request Example
+include::{snippets}/{admin}/accept_delete_non_exist_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/accept_delete_non_exist_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/accept_delete_non_exist_test/curl-request.adoc[]
+
+=== 일정 삭제 거절 - 성공
+===== Request Example
+include::{snippets}/{admin}/delete_reject_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/delete_reject_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/delete_reject_test/curl-request.adoc[]
+
+=== 일정 삭제 거절 - 인증 실패
+===== Request Example
+include::{snippets}/{admin}/delete_reject_auth_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/delete_reject_auth_fail_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/delete_reject_auth_fail_test/curl-request.adoc[]
+
+=== 일정 삭제 거절 - 유효한 토큰은 있으나 삭제된 유저일 경우
+===== Request Example
+include::{snippets}/{admin}/delete_reject_non_exist_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/delete_reject_non_exist_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/delete_reject_non_exist_test/curl-request.adoc[]
+
+=== 일정 업데이트 승인 - 성공
+===== Request Example
+include::{snippets}/{admin}/update_accept_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/update_accept_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/update_accept_test/curl-request.adoc[]
+
+=== 일정 업데이트 승인 - 인증 실패
+===== Request Example
+include::{snippets}/{admin}/accept_update_auth_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/accept_update_auth_fail_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/accept_update_auth_fail_test/curl-request.adoc[]
+
+=== 일정 업데이트 승인 - 유효한 토큰은 있으나 삭제된 유저일 경우
+===== Request Example
+include::{snippets}/{admin}/accept_update_non_exist_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/accept_update_non_exist_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/accept_update_non_exist_test/curl-request.adoc[]
+
+=== 일정 업데이트 승인 - 존재하지 않는 수정 요청 실패
+===== Request Example
+include::{snippets}/{admin}/accept_update_non_exist_update_request_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/accept_update_non_exist_update_request_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/accept_update_non_exist_update_request_test/curl-request.adoc[]
+
+=== 일정 수정 거절 - 성공
+===== Request Example
+include::{snippets}/{admin}/reject_update_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/reject_update_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/reject_update_test/curl-request.adoc[]
+
+=== 일정 수정 거절 - 인증 실패
+===== Request Example
+include::{snippets}/{admin}/reject_update_auth_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/reject_update_auth_fail_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/reject_update_auth_fail_test/curl-request.adoc[]
+
+=== 일정 삭제 거절 - 유효한 토큰은 있으나 삭제된 유저일 경우
+===== Request Example
+include::{snippets}/{admin}/update_reject_non_exist_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/update_reject_non_exist_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/update_reject_non_exist_test/curl-request.adoc[]
+
+=== 일정 업데이트 승인 - 존재하지 않는 수정 요청 실패
+===== Request Example
+include::{snippets}/{admin}/reject_update_non_exist_update_request_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/reject_update_non_exist_update_request_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/reject_update_non_exist_update_request_test/curl-request.adoc[]
+
+=== 등록 요청 데이터조회 - 성공
+===== Request Example
+include::{snippets}/{admin}/save_request_list_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/save_request_list_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/save_request_list_test/curl-request.adoc[]
+
+=== 수정 요청 데이터 조회 - 성공
+===== Request Example
+include::{snippets}/{admin}/update_request_list_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/update_request_list_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/update_request_list_test/curl-request.adoc[]
+
+=== 삭제 요청 데이터 조회 - 성공
+===== Request Example
+include::{snippets}/{admin}/delete_request_list_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/delete_request_list_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/delete_request_list_test/curl-request.adoc[]
+
+=== 전체 유저 조회 - 성공
+===== Request Example
+include::{snippets}/{admin}/users_list_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/users_list_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/users_list_test/curl-request.adoc[]

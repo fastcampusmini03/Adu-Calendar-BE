@@ -1,6 +1,7 @@
 package com.fastcampus03.calendarbe.dto.admin;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
@@ -8,6 +9,7 @@ import javax.validation.constraints.Pattern;
 public class AdminRequest {
 
     @Getter
+    @Setter
     public static class UpdateRoleDTO{
 
         @NotEmpty
