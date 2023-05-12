@@ -1,5 +1,6 @@
 package com.fastcampus03.calendarbe.model.annualDuty;
 
+import com.fastcampus03.calendarbe.dto.admin.AdminResponse;
 import com.fastcampus03.calendarbe.model.user.User;
 import com.fastcampus03.calendarbe.core.util.StatusConst;
 import lombok.*;
@@ -81,5 +82,75 @@ public class AnnualDuty {
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public AdminResponse.AcceptSaveOutDTO toAcceptSaveOutDTO() {
+        return AdminResponse.AcceptSaveOutDTO
+                .builder()
+                .id(id)
+                .status(status)
+                .user(user.toUserAcceptSaveOutDTO())
+                .title(title)
+                .startTime(startTime)
+                .endTime(endTime)
+                .type(type)
+                .updateStatus(updateStatus)
+                .build();
+    }
+
+    public AdminResponse.AcceptUpdateOutDTO toAcceptUpdateOutDTO() {
+        return AdminResponse.AcceptUpdateOutDTO
+                .builder()
+                .id(id)
+                .status(status)
+                .user(user.toUserAcceptUpdateOutDTO())
+                .title(title)
+                .startTime(startTime)
+                .endTime(endTime)
+                .type(type)
+                .updateStatus(updateStatus)
+                .build();
+    }
+
+    public AdminResponse.AnnualDutySaveRequestListOutDTO toAnnualDutySaveRequestListOutDTO() {
+        return AdminResponse.AnnualDutySaveRequestListOutDTO
+                .builder()
+                .id(id)
+                .status(status)
+                .user(user.toUserAnnualDutySaveRequestListOutDTO())
+                .title(title)
+                .startTime(startTime)
+                .endTime(endTime)
+                .type(type)
+                .updateStatus(updateStatus)
+                .build();
+    }
+
+    public AdminResponse.AnnualDutyDeleteRequestListOutDTO toAnnualDutyDeleteRequestListOutDTO() {
+        return AdminResponse.AnnualDutyDeleteRequestListOutDTO
+                .builder()
+                .id(id)
+                .status(status)
+                .user(user.toUserAnnualDutyDeleteRequestListOutDTO())
+                .title(title)
+                .startTime(startTime)
+                .endTime(endTime)
+                .type(type)
+                .updateStatus(updateStatus)
+                .build();
+    }
+
+    public AdminResponse.UpdateRequestLogUpdateRequestListOutDTO.AnnualDutyUpdateRequestLogUpdateRequestListOutDTO toAnnualDutyUpdateRequestLogUpdateRequestListOutDTO() {
+        return AdminResponse.UpdateRequestLogUpdateRequestListOutDTO.AnnualDutyUpdateRequestLogUpdateRequestListOutDTO
+                .builder()
+                .id(id)
+                .status(status)
+                .user(user.toUserAnnualDutyUpdateRequestLogUpdateRequestListOutDTO())
+                .title(title)
+                .startTime(startTime)
+                .endTime(endTime)
+                .type(type)
+                .updateStatus(updateStatus)
+                .build();
     }
 }

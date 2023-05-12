@@ -1,10 +1,10 @@
 package com.fastcampus03.calendarbe.model.user;
 
+import com.fastcampus03.calendarbe.dto.admin.AdminResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 
 @Builder
@@ -56,5 +56,75 @@ public class User {
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public AdminResponse.UpdateRoleOutDTO toUpdateRoleOutDTO() {
+        return AdminResponse.UpdateRoleOutDTO
+                .builder()
+                .id(id)
+                .email(email)
+                .username(username)
+                .role(role)
+                .build();
+    }
+
+    public AdminResponse.AcceptSaveOutDTO.UserAcceptSaveOutDTO toUserAcceptSaveOutDTO() {
+        return AdminResponse.AcceptSaveOutDTO.UserAcceptSaveOutDTO
+                .builder()
+                .id(id)
+                .email(email)
+                .username(username)
+                .role(role)
+                .build();
+    }
+
+    public AdminResponse.AcceptUpdateOutDTO.UserAcceptUpdateOutDTO toUserAcceptUpdateOutDTO() {
+        return AdminResponse.AcceptUpdateOutDTO.UserAcceptUpdateOutDTO
+                .builder()
+                .id(id)
+                .email(email)
+                .username(username)
+                .role(role)
+                .build();
+    }
+
+    public AdminResponse.AnnualDutySaveRequestListOutDTO.UserAnnualDutySaveRequestListOutDTO toUserAnnualDutySaveRequestListOutDTO() {
+        return AdminResponse.AnnualDutySaveRequestListOutDTO.UserAnnualDutySaveRequestListOutDTO
+                .builder()
+                .id(id)
+                .email(email)
+                .username(username)
+                .role(role)
+                .build();
+    }
+
+    public AdminResponse.AnnualDutyDeleteRequestListOutDTO.UserAnnualDutyDeleteRequestListOutDTO toUserAnnualDutyDeleteRequestListOutDTO() {
+        return AdminResponse.AnnualDutyDeleteRequestListOutDTO.UserAnnualDutyDeleteRequestListOutDTO
+                .builder()
+                .id(id)
+                .email(email)
+                .username(username)
+                .role(role)
+                .build();
+    }
+
+    public AdminResponse.UpdateRequestLogUpdateRequestListOutDTO.AnnualDutyUpdateRequestLogUpdateRequestListOutDTO.UserAnnualDutyUpdateRequestLogUpdateRequestListOutDTO toUserAnnualDutyUpdateRequestLogUpdateRequestListOutDTO() {
+        return AdminResponse.UpdateRequestLogUpdateRequestListOutDTO.AnnualDutyUpdateRequestLogUpdateRequestListOutDTO.UserAnnualDutyUpdateRequestLogUpdateRequestListOutDTO
+                .builder()
+                .id(id)
+                .email(email)
+                .username(username)
+                .role(role)
+                .build();
+    }
+
+    public AdminResponse.UserUsersListOutDTO toUserUsersList() {
+        return AdminResponse.UserUsersListOutDTO
+                .builder()
+                .id(id)
+                .email(email)
+                .username(username)
+                .role(role)
+                .build();
     }
 }

@@ -1,5 +1,6 @@
 package com.fastcampus03.calendarbe.model.log.update;
 
+import com.fastcampus03.calendarbe.dto.admin.AdminResponse;
 import com.fastcampus03.calendarbe.model.annualDuty.AnnualDuty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -50,4 +51,15 @@ public class UpdateRequestLog {
         this.updatedAt = LocalDateTime.now();
     }
 
+    public AdminResponse.UpdateRequestLogUpdateRequestListOutDTO toUpdateRequestLogUpdateRequestListOutDTO() {
+        return AdminResponse.UpdateRequestLogUpdateRequestListOutDTO
+                .builder()
+                .id(id)
+                .annualDuty(annualDuty.toAnnualDutyUpdateRequestLogUpdateRequestListOutDTO())
+                .title(title)
+                .startTime(startTime)
+                .endTime(endTime)
+                .status(status)
+                .build();
+    }
 }
