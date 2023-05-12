@@ -84,18 +84,15 @@ public class UserService {
         String rawPassword = joinInDTO.getPassword();
         String encPassword = passwordEncoder.encode(rawPassword); // 60Byte
         joinInDTO.setPassword(encPassword);
-        try {
-            User userPS = userRepository.save(joinInDTO.toEntity());
-            Map<String, Object> joinResponse = 인증(joinInDTO.getEmail(), rawPassword);
-            로그기록(userPS, request);
-            return joinResponse;
-        } catch (RuntimeException e) {
-            throw new Exception500("회원 가입에 실패하였습니다." + e.getMessage());
-        }
+
+        User userPS = userRepository.save(joinInDTO.toEntity());
+        Map<String, Object> joinResponse = 인증(joinInDTO.getEmail(), rawPassword);
+        로그기록(userPS, request);
+        return joinResponse;
     }
 
     @Transactional
-    public ResponseDTO<?> 회원정보수정(UserRequest.UpdateInDTO updateInDTO, MyUserDetails myUserDetails) {
+    public User 회원정보수정(UserRequest.UpdateInDTO updateInDTO, MyUserDetails myUserDetails) {
         // 현재 인증된 사용자의 정보를 가져옵니다.
         User user = myUserDetails.getUser();
 
@@ -104,20 +101,20 @@ public class UserService {
         );
         // 수정하려는 사용자의 정보를 업데이트합니다.
         userPS.updateInfo(passwordEncoder.encode(updateInDTO.getPassword()), updateInDTO.getUsername());
-        return new ResponseDTO<>(userPS);
+        return userPS;
     }
 
-    public ResponseDTO<?> 회원정보보기(MyUserDetails myUserDetails) {
+    public User 회원정보보기(MyUserDetails myUserDetails) {
         // 현재 인증된 사용자의 정보를 가져옵니다.
         User user = myUserDetails.getUser();
 
         User userPS = userRepository.findById(user.getId()).orElseThrow(
                 () -> new Exception401("존재하지 않는 회원입니다.")
         );
-        return new ResponseDTO<>(userPS);
+        return userPS;
     }
 
-    public ResponseDTO<?> 요청결과확인조회(MyUserDetails myUserDetails) {
+    public List<AnnualDutyChecked> 요청결과확인조회(MyUserDetails myUserDetails) {
         // 현재 인증된 사용자의 정보를 가져옵니다.
         User user = myUserDetails.getUser();
 
@@ -128,12 +125,12 @@ public class UserService {
 //        for (AnnualDutyChecked annualDutyCheckedPS : annualDutyCheckedListPS) {
 //            annualDutyCheckedPS.afterUserCheck();
 //        }
-        return new ResponseDTO<>(annualDutyCheckedListPS);
+        return annualDutyCheckedListPS;
     }
 
 
     @Transactional
-    public ResponseDTO<?> 요청결과확인(List<Long> annualDutyCheckedList, MyUserDetails myUserDetails) {
+    public void 요청결과확인(List<Long> annualDutyCheckedList, MyUserDetails myUserDetails) {
         // 현재 인증된 사용자의 정보를 가져옵니다.
         User user = myUserDetails.getUser();
         User userPS = userRepository.findById(user.getId()).orElseThrow(
@@ -146,6 +143,5 @@ public class UserService {
             );
             annualDutyCheckedPS.afterUserCheck();
         }
-        return new ResponseDTO<>(null);
     }
 }

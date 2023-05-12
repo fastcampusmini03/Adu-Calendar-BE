@@ -4,7 +4,9 @@ import com.fastcampus03.calendarbe.core.auth.jwt.MyJwtProvider;
 import com.fastcampus03.calendarbe.core.auth.session.MyUserDetails;
 import com.fastcampus03.calendarbe.dto.ResponseDTO;
 import com.fastcampus03.calendarbe.dto.user.UserRequest;
+import com.fastcampus03.calendarbe.model.annualDuty.AnnualDutyChecked;
 import com.fastcampus03.calendarbe.model.log.update.UpdateRequestLog;
+import com.fastcampus03.calendarbe.model.user.User;
 import com.fastcampus03.calendarbe.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +49,8 @@ public class UserController {
     public ResponseEntity<?> userInfo(
             @AuthenticationPrincipal MyUserDetails myUserDetails
     ) {
-        ResponseDTO<?> responseDTO = userService.회원정보보기(myUserDetails);
+        User user = userService.회원정보보기(myUserDetails);
+        ResponseDTO<?> responseDTO = new ResponseDTO<>(user);
         return ResponseEntity.ok().body(responseDTO);
     }
 
@@ -57,16 +60,17 @@ public class UserController {
             Errors errors,
             @AuthenticationPrincipal MyUserDetails myUserDetails
     ) {
-        ResponseDTO<?> responseDTO = userService.회원정보수정(updateInDTO, myUserDetails);
+        User updatedUser = userService.회원정보수정(updateInDTO, myUserDetails);
+        ResponseDTO<?> responseDTO = new ResponseDTO<>(updatedUser);
         return ResponseEntity.ok().body(responseDTO);
     }
-    // 유저 확인 기능
 
     @GetMapping("/s/user/annualDutyCheck")
     public ResponseEntity<?> annualDutyCheck(
             @AuthenticationPrincipal MyUserDetails myUserDetails
     ) {
-        ResponseDTO<?> responseDTO = userService.요청결과확인조회(myUserDetails);
+        List<AnnualDutyChecked> annualDutyCheckedList = userService.요청결과확인조회(myUserDetails);
+        ResponseDTO<?> responseDTO = new ResponseDTO<>(annualDutyCheckedList);
         return ResponseEntity.ok().body(responseDTO);
     }
 
@@ -75,8 +79,8 @@ public class UserController {
             @RequestBody Map<String, List<Long>> requestData,
             @AuthenticationPrincipal MyUserDetails myUserDetails
     ) {
-        List<Long> annualDutyCheckedList = requestData.get("updateRequestLogList");
-        ResponseDTO<?> responseDTO = userService.요청결과확인(annualDutyCheckedList, myUserDetails);
-        return ResponseEntity.ok().body(responseDTO);
+        List<Long> annualDutyCheckedList = requestData.get("annualDutyCheckedList");
+        userService.요청결과확인(annualDutyCheckedList, myUserDetails);
+        return ResponseEntity.ok().body(null);
     }
 }

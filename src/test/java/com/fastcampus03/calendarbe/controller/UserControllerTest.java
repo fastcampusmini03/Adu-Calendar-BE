@@ -470,7 +470,7 @@ public class UserControllerTest extends MyRestDoc {
             AnnualDutyChecked annualDutyChecked = annualDutyCheckedRepository.save(dummy.newADC(annualDutyPS));
             adcIds.add(annualDutyChecked.getId());
         }
-        requestData.put("updateRequestLogList", adcIds);
+        requestData.put("annualDutyCheckedList", adcIds);
         String requestBody = om.writeValueAsString(requestData);
 
         // when
@@ -482,9 +482,6 @@ public class UserControllerTest extends MyRestDoc {
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         // then
         resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value(200))
-                .andExpect(jsonPath("$.msg").value("성공"))
-                .andExpect(jsonPath("$.data").isEmpty())
                 .andDo(MockMvcResultHandlers.print()).andDo(document);
 
         for (Long adcId : adcIds) {
