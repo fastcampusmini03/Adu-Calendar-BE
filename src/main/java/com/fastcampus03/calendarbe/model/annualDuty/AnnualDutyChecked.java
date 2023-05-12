@@ -1,6 +1,7 @@
 package com.fastcampus03.calendarbe.model.annualDuty;
 
 import com.fastcampus03.calendarbe.core.util.TimeBaseEntity;
+import com.fastcampus03.calendarbe.dto.user.UserResponse;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -33,4 +34,12 @@ public class AnnualDutyChecked extends TimeBaseEntity {
         this.isShown = true;
     }
 
+    public UserResponse.AnnualDutyCheckOutDTO toAnnualDutyCheckOutDTO() {
+        return UserResponse.AnnualDutyCheckOutDTO
+                .builder()
+                .id(id)
+                .msg(msg)
+                .annualDuty(annualDuty.toAnnualDutyAnnualDutyCheckOutDTO())
+                .build();
+    }
 }

@@ -2,6 +2,7 @@ package com.fastcampus03.calendarbe.model.log.update;
 
 import com.fastcampus03.calendarbe.core.util.TimeBaseEntity;
 import com.fastcampus03.calendarbe.dto.admin.AdminResponse;
+import com.fastcampus03.calendarbe.dto.annualDuty.AnnualDutyResponse;
 import com.fastcampus03.calendarbe.model.annualDuty.AnnualDuty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -21,7 +22,6 @@ public class UpdateRequestLog extends TimeBaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonIgnoreProperties("user")
     @ManyToOne(fetch = FetchType.LAZY)
     private AnnualDuty annualDuty;
 
@@ -42,6 +42,18 @@ public class UpdateRequestLog extends TimeBaseEntity {
                 .builder()
                 .id(id)
                 .annualDuty(annualDuty.toAnnualDutyUpdateRequestLogUpdateRequestListOutDTO())
+                .title(title)
+                .startTime(startTime)
+                .endTime(endTime)
+                .status(status)
+                .build();
+    }
+
+    public AnnualDutyResponse.UpdateAnnualDutyOutDTO toUpdateAnnualDutyOutDTO() {
+        return AnnualDutyResponse.UpdateAnnualDutyOutDTO
+                .builder()
+                .id(id)
+                .annualDuty(annualDuty.toAnnualDutyUpdateAnnualDutyOutDTO())
                 .title(title)
                 .startTime(startTime)
                 .endTime(endTime)

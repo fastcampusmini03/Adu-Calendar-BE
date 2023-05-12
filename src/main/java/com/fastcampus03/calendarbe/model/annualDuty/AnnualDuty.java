@@ -2,6 +2,8 @@ package com.fastcampus03.calendarbe.model.annualDuty;
 
 import com.fastcampus03.calendarbe.core.util.TimeBaseEntity;
 import com.fastcampus03.calendarbe.dto.admin.AdminResponse;
+import com.fastcampus03.calendarbe.dto.annualDuty.AnnualDutyResponse;
+import com.fastcampus03.calendarbe.dto.user.UserResponse;
 import com.fastcampus03.calendarbe.model.user.User;
 import com.fastcampus03.calendarbe.core.util.StatusConst;
 import lombok.*;
@@ -133,6 +135,62 @@ public class AnnualDuty extends TimeBaseEntity {
                 .id(id)
                 .status(status)
                 .user(user.toUserAnnualDutyUpdateRequestLogUpdateRequestListOutDTO())
+                .title(title)
+                .startTime(startTime)
+                .endTime(endTime)
+                .type(type)
+                .updateStatus(updateStatus)
+                .build();
+    }
+
+    public UserResponse.AnnualDutyCheckOutDTO.AnnualDutyAnnualDutyCheckOutDTO toAnnualDutyAnnualDutyCheckOutDTO() {
+        return UserResponse.AnnualDutyCheckOutDTO.AnnualDutyAnnualDutyCheckOutDTO
+                .builder()
+                .id(id)
+                .status(status)
+                .user(user.toUserAnnualDutyAnnualDutyCheckOutDTO())
+                .title(title)
+                .startTime(startTime)
+                .endTime(endTime)
+                .type(type)
+                .updateStatus(updateStatus)
+                .build();
+    }
+
+    public AnnualDutyResponse.SaveOutDTO toSaveOutDTO() {
+        return AnnualDutyResponse.SaveOutDTO
+                .builder()
+                .id(id)
+                .status(status)
+                .user(user.toUserSaveOutDTO())
+                .title(title)
+                .startTime(startTime)
+                .endTime(endTime)
+                .type(type)
+                .updateStatus(updateStatus)
+                .build();
+    }
+
+    public AnnualDutyResponse.UpdateAnnualDutyOutDTO.AnnualDutyUpdateAnnualDutyOutDTO toAnnualDutyUpdateAnnualDutyOutDTO() {
+        return AnnualDutyResponse.UpdateAnnualDutyOutDTO.AnnualDutyUpdateAnnualDutyOutDTO
+                .builder()
+                .id(id)
+                .status(status)
+                .user(user.toUserAnnualDutyUpdateAnnualDutyOutDTO())
+                .title(title)
+                .startTime(startTime)
+                .endTime(endTime)
+                .type(type)
+                .updateStatus(updateStatus)
+                .build();
+    }
+
+    public AnnualDutyResponse.ShowAnnualDutyListOutDTO toShowAnnualDutyListOutDTO() {
+        return AnnualDutyResponse.ShowAnnualDutyListOutDTO
+                .builder()
+                .id(id)
+                .status(status)
+                .user(user.toUserShowAnnualDutyListOutDTO())
                 .title(title)
                 .startTime(startTime)
                 .endTime(endTime)
