@@ -1,8 +1,8 @@
 package com.fastcampus03.calendarbe.model.log.update;
 
 import com.fastcampus03.calendarbe.core.util.TimeBaseEntity;
+import com.fastcampus03.calendarbe.dto.admin.AdminResponse;
 import com.fastcampus03.calendarbe.model.annualDuty.AnnualDuty;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
@@ -37,4 +37,15 @@ public class UpdateRequestLog extends TimeBaseEntity {
     @Column(nullable = false)
     private Boolean status; // true : 처리 후, false : 처리 전
 
+    public AdminResponse.UpdateRequestLogUpdateRequestListOutDTO toUpdateRequestLogUpdateRequestListOutDTO() {
+        return AdminResponse.UpdateRequestLogUpdateRequestListOutDTO
+                .builder()
+                .id(id)
+                .annualDuty(annualDuty.toAnnualDutyUpdateRequestLogUpdateRequestListOutDTO())
+                .title(title)
+                .startTime(startTime)
+                .endTime(endTime)
+                .status(status)
+                .build();
+    }
 }
