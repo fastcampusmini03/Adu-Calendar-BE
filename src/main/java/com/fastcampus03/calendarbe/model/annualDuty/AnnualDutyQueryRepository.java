@@ -1,35 +1,63 @@
 package com.fastcampus03.calendarbe.model.annualDuty;
 
 import com.fastcampus03.calendarbe.model.log.update.UpdateRequestLog;
+import com.fastcampus03.calendarbe.model.user.QUser;
 import com.fastcampus03.calendarbe.model.user.User;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
+import static com.fastcampus03.calendarbe.model.annualDuty.QAnnualDuty.*;
+
 @Repository
-@RequiredArgsConstructor
 public class AnnualDutyQueryRepository {
 
     private final EntityManager em;
+    private final JPAQueryFactory query;
+
     private final int SIZE = 8;
+
+    public AnnualDutyQueryRepository(EntityManager em) {
+        this.em = em;
+        this.query = new JPAQueryFactory(em);
+    }
 
     public Page<AnnualDuty> findAllByStatus(Integer page, String approving) {
         int startPosition = page * SIZE;
+//
+//        String jpql = "select ad from AnnualDuty ad join fetch ad.user where ad.status=:status";
+//
+//        List<AnnualDuty> annualDutyListPS = em.createQuery(jpql)
+//                .setParameter("status", approving)
+//                .setFirstResult(startPosition) // 시작 번호
+//                .setMaxResults(SIZE) // 개수
+//                .getResultList();
+//
+//        Long totalCount = em.createQuery("select count(ad) from AnnualDuty ad", Long.class).getSingleResult();
+//        return new PageImpl<>(annualDutyListPS, PageRequest.of(page, SIZE), totalCount);
 
-        String jpql = "select ad from AnnualDuty ad join fetch ad.user where ad.status=:status";
+        List<AnnualDuty> annualDutyListPS = query
+                .selectFrom(annualDuty)
+                .join(annualDuty.user, QUser.user)
+                .fetchJoin()
+                .where(annualDuty.status.eq(approving))
+                .orderBy(annualDuty.id.desc())
+                .offset(startPosition)
+                .limit(SIZE)
+                .fetch();
 
-        List<AnnualDuty> annualDutyListPS = em.createQuery(jpql)
-                .setParameter("status", approving)
-                .setFirstResult(startPosition) // 시작 번호
-                .setMaxResults(SIZE) // 개수
-                .getResultList();
+        Long totalCount = query
+                .selectFrom(annualDuty)
+                .fetchCount();
 
-        Long totalCount = em.createQuery("select count(ad) from AnnualDuty ad", Long.class).getSingleResult();
         return new PageImpl<>(annualDutyListPS, PageRequest.of(page, SIZE), totalCount);
     }
 
