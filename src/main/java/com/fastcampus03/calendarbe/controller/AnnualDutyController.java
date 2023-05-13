@@ -7,6 +7,7 @@ import com.fastcampus03.calendarbe.dto.annualDuty.AnnualDutyRequest;
 import com.fastcampus03.calendarbe.dto.annualDuty.AnnualDutyResponse;
 import com.fastcampus03.calendarbe.model.annualDuty.AnnualDuty;
 import com.fastcampus03.calendarbe.model.log.update.UpdateRequestLog;
+import com.fastcampus03.calendarbe.model.user.User;
 import com.fastcampus03.calendarbe.service.AnnualDutyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -61,7 +62,11 @@ public class AnnualDutyController {
     }
 
     @GetMapping("/annualDuty")
-    public ResponseEntity<?> showAnnualDutyList(@RequestParam(required = false) Integer year, @RequestParam(required = false) Integer month, HttpServletRequest request) {
+    public ResponseEntity<?> showAnnualDutyList(
+            @RequestParam(required = false) Integer year,
+            @RequestParam(required = false) Integer month,
+            @AuthenticationPrincipal MyUserDetails myUserDetails
+    ) {
         if (year == null) {
             year = LocalDateTime.now().getYear();
         }
@@ -81,9 +86,8 @@ public class AnnualDutyController {
         }
         LocalDateTime startDate = LocalDateTime.of(prevYear, prevMonth, 16, 0, 0, 0);
         LocalDateTime endDate = LocalDateTime.of(nextYear, nextMonth, 15, 23, 59, 59);
-        String prefixJwt = request.getHeader(MyJwtProvider.HEADER);
 
-        List<AnnualDuty> annualDutyList = annualDutyService.일정조회(startDate, endDate, prefixJwt);
+        List<AnnualDuty> annualDutyList = annualDutyService.일정조회(startDate, endDate, myUserDetails);
         List<AnnualDutyResponse.ShowAnnualDutyListOutDTO> showAnnualDutyListOutDTOList
                 = annualDutyList.stream().map(o -> o.toShowAnnualDutyListOutDTO()).collect(Collectors.toList());
         ResponseDTO<?> responseDTO = new ResponseDTO<>(showAnnualDutyListOutDTOList);

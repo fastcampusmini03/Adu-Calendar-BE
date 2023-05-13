@@ -1,5 +1,6 @@
 package com.fastcampus03.calendarbe.model.annualDuty;
 
+import com.fastcampus03.calendarbe.core.util.StatusConst;
 import com.fastcampus03.calendarbe.model.log.update.UpdateRequestLog;
 import com.fastcampus03.calendarbe.model.user.QUser;
 import com.fastcampus03.calendarbe.model.user.User;
@@ -9,10 +10,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.fastcampus03.calendarbe.model.annualDuty.QAnnualDuty.*;
@@ -103,5 +106,28 @@ public class AnnualDutyQueryRepository {
 
         Long totalCount = em.createQuery("select count(u) from User u", Long.class).getSingleResult();
         return new PageImpl<>(usersList, PageRequest.of(page, SIZE), totalCount);
+    }
+
+    public List<AnnualDuty> findByDateRange(LocalDateTime startDate, LocalDateTime endDate, User user) {
+        return query
+                .selectFrom(annualDuty)
+                .join(annualDuty.user, QUser.user)
+                .fetchJoin()
+                .where((annualDuty.startTime.between(startDate, endDate)
+                        .or(annualDuty.endTime.between(startDate, endDate))
+                        .or(annualDuty.startTime.loe(endDate).and(annualDuty.endTime.goe(startDate))))
+                        .and(annualDuty.status.eq(StatusConst.ACCEPTED).or(statusByUser(user))))
+                .fetch();
+    }
+
+    private static BooleanExpression statusByUser(User user) {
+        if (user != null) {
+            if (user.getRole().equals("USER")) {
+                return annualDuty.status.eq(StatusConst.APPROVING).and(annualDuty.user.email.eq(user.getEmail()));
+            } else {
+                return annualDuty.status.eq(StatusConst.APPROVING);
+            }
+        }
+        return null;
     }
 }

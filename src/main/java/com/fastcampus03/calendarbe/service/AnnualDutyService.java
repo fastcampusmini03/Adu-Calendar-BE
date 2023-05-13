@@ -9,6 +9,7 @@ import com.fastcampus03.calendarbe.core.exception.Exception500;
 import com.fastcampus03.calendarbe.dto.ResponseDTO;
 import com.fastcampus03.calendarbe.dto.annualDuty.AnnualDutyRequest;
 import com.fastcampus03.calendarbe.model.annualDuty.AnnualDuty;
+import com.fastcampus03.calendarbe.model.annualDuty.AnnualDutyQueryRepository;
 import com.fastcampus03.calendarbe.model.annualDuty.AnnualDutyRepository;
 import com.fastcampus03.calendarbe.model.log.update.UpdateRequestLog;
 import com.fastcampus03.calendarbe.model.log.update.UpdateRequestLogRepository;
@@ -30,6 +31,7 @@ import java.util.List;
 public class AnnualDutyService {
     private final UserRepository userRepository;
     private final AnnualDutyRepository annualDutyRepository;
+    private final AnnualDutyQueryRepository annualDutyQueryRepository;
     private final UpdateRequestLogRepository updateLogRepository;
 
     @Transactional
@@ -71,32 +73,24 @@ public class AnnualDutyService {
         deleteAnnualdutyPS.deleteRequest(); // null -> 2
     }
 
-    public List<AnnualDuty> 일정조회(LocalDateTime startDate, LocalDateTime endDate, String prefixJwt) {
-        if (prefixJwt == null) {
-            List<AnnualDuty> annualDutyList = annualDutyRepository.findByDateRange(startDate, endDate);
-            return annualDutyList;
-        }else{
-            String jwt = prefixJwt.replace(MyJwtProvider.TOKEN_PREFIX, "");
-            System.out.println("디버그 : 토큰 있음");
-            DecodedJWT decodedJWT = MyJwtProvider.verify(jwt);
-            Long id = decodedJWT.getClaim("id").asLong();
+    public List<AnnualDuty> 일정조회(LocalDateTime startDate, LocalDateTime endDate, MyUserDetails myUserDetails) {
+        User user = 인증(myUserDetails);
+        return annualDutyQueryRepository.findByDateRange(startDate, endDate, user);
+    }
 
-            User user = userRepository.findById(id)
-                    .orElseThrow(() -> new Exception400("id", "존재하지 않는 유저입니다. "));
+    private User 인증(MyUserDetails myUserDetails) {
 
-            String role = decodedJWT.getClaim("role").asString();
-            if (role.equals("ADMIN")){
-                List<AnnualDuty> annualDutyList = annualDutyRepository.findByDateRangeForAdmin(startDate, endDate);
-                return annualDutyList;
+        if (myUserDetails != null) {
+            User user = myUserDetails.getUser();
+            User userPS = userRepository.findById(user.getId())
+                    .orElseThrow(() -> new Exception400("id", "등록되지 않은 유저입니다."));
 
-            }else if (role.equals("USER")){
-                String email = user.getEmail();
-                List<AnnualDuty> annualDutyList = annualDutyRepository.findByDateRangeForUser(email, startDate, endDate);
-                return annualDutyList;
-
-            }else{
-                throw new Exception400("role", "존재하지 않는 권한입니다. ");
+            if (!userPS.getRole().equals(user.getRole())) {
+                throw new Exception401("토큰이 유효하지 않습니다.");
             }
+            return userPS;
+        } else {
+            return null;
         }
     }
 }

@@ -346,7 +346,7 @@ class AnnualDutyControllerTest extends MyRestDoc {
 
         // when
         ResultActions resultActions = mvc
-                .perform(get("/annualDuty/?year=" + year + "&month=" + month));
+                .perform(get("/annualDuty?year=" + year + "&month=" + month));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         log.info("responseBody={}", responseBody);
 
