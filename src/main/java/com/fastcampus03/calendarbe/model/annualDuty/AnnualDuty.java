@@ -6,6 +6,7 @@ import com.fastcampus03.calendarbe.dto.annualDuty.AnnualDutyResponse;
 import com.fastcampus03.calendarbe.dto.user.UserResponse;
 import com.fastcampus03.calendarbe.model.user.User;
 import com.fastcampus03.calendarbe.core.util.StatusConst;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -26,7 +27,7 @@ public class AnnualDuty extends TimeBaseEntity {
     @Column(nullable = false, length = 5)
     private String status; // 승인중 / 승인 / 거절
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER) // checkpoint
     private User user;
 
     @Column(nullable = false, length = 100)

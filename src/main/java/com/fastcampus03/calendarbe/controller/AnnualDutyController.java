@@ -61,9 +61,26 @@ public class AnnualDutyController {
     }
 
     @GetMapping("/annualDuty")
-    public ResponseEntity<?> showAnnualDutyList(@RequestParam("year") int year, @RequestParam("month") int month, HttpServletRequest request){
-        LocalDateTime startDate = LocalDateTime.of(year, month-1, 16, 0, 0, 0);
-        LocalDateTime endDate = LocalDateTime.of(year, month+1, 15, 23, 59, 59);
+    public ResponseEntity<?> showAnnualDutyList(@RequestParam(required = false) Integer year, @RequestParam(required = false) Integer month, HttpServletRequest request) {
+        if (year == null) {
+            year = LocalDateTime.now().getYear();
+        }
+        if (month == null) {
+            month = LocalDateTime.now().getMonthValue();
+        }
+        int prevMonth = month - 1;
+        int nextMonth = month + 1;
+        int prevYear = year;
+        int nextYear = year;
+        if (month == 1) {
+            prevMonth = 12;
+            prevYear = year - 1;
+        } else if (month == 12) {
+            nextMonth = 1;
+            nextYear = year + 1;
+        }
+        LocalDateTime startDate = LocalDateTime.of(prevYear, prevMonth, 16, 0, 0, 0);
+        LocalDateTime endDate = LocalDateTime.of(nextYear, nextMonth, 15, 23, 59, 59);
         String prefixJwt = request.getHeader(MyJwtProvider.HEADER);
 
         List<AnnualDuty> annualDutyList = annualDutyService.일정조회(startDate, endDate, prefixJwt);
