@@ -15,7 +15,7 @@ public class CalendarBeApplication {
 
     // hibernateLazyInitializer 제거용 라이브러리
     @Bean
-    Hibernate5Module hibernate5Module(){
+    Hibernate5Module hibernate5Module() {
         return new Hibernate5Module();
     }
 
