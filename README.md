@@ -43,6 +43,7 @@
 - USER 본인의 신청 내역과 신청 결과(승인/거절) 보여주기
 
 **ㅤ자세한 기능 구현 사항은**
-<a href="files/index.html" target="_blank">api 문서</a>
+<a href="files/REST\ API.pdf" target="_blank">api 문서</a>
+
 ### 🔗ER-Diagram
 <img width="691" alt="erdiagram" src="https://github.com/fastcampusmini03/calendarBE/assets/92681117/ab8142b5-37df-4a56-8a84-e9efe38bcdf3">
