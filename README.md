@@ -26,6 +26,9 @@
 - **MySQL**
 - **h2**
 
+### 시스템 아키텍쳐 설계
+![System Architecture](./files/system_architecture.png)
+
 ### 🗒️구현 사항
 #### ㅤ🙋🏻‍♀️**유저 관련 기능**
 - 회원가입
@@ -39,6 +42,6 @@
 - 캘린더에서 사용자들의 연차와 당직 보여주기
 - USER 본인의 신청 내역과 신청 결과(승인/거절) 보여주기
 
-**ㅤ자세한 기능 구현 사항은** [api문서](https://fastcampusmini03.github.io/Adu-Calendar-BE/)
+**ㅤ자세한 기능 구현 사항은** [api문서](./files/https://fastcampusmini03.github.io/Adu-Calendar-BE/)
 ### 🔗ER-Diagram
 <img width="691" alt="erdiagram" src="https://github.com/fastcampusmini03/calendarBE/assets/92681117/ab8142b5-37df-4a56-8a84-e9efe38bcdf3">
