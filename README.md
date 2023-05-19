@@ -45,8 +45,7 @@
 - USER 본인의 신청 내역과 신청 결과(승인/거절) 보여주기
 
 **ㅤ자세한 기능 구현 사항은**<br>
-<a href="files/REST%20API.pdf" target="_blank">api 문서</a>
-![REST API 명세서](https://github.com/fastcampusmini03/Adu-Calendar-BE/files/11516244/REST.API.pdf)
+[api문서](https://fastcampusmini03.github.io/Adu-Calendar-BE/)
 
 ### 🔗ER-Diagram
 <img width="691" alt="erdiagram" src="https://github.com/fastcampusmini03/calendarBE/assets/92681117/ab8142b5-37df-4a56-8a84-e9efe38bcdf3">
