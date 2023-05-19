@@ -28,6 +28,8 @@
 
 ### 시스템 아키텍쳐 설계
 ![System Architecture](./files/system_architecture.png)
+#### Focus Backend
+![BackSystemEnv](./files/back_system_env.png)
 
 ### 🗒️구현 사항
 #### ㅤ🙋🏻‍♀️**유저 관련 기능**
@@ -41,6 +43,20 @@
 - ADMIN은 USER의 신청을 승인/거절
 - 캘린더에서 사용자들의 연차와 당직 보여주기
 - USER 본인의 신청 내역과 신청 결과(승인/거절) 보여주기
+
+### 🎥시연 영상
+<div style="display:flex; flex-wrap:wrap; justify-content:center;">
+  <img src="ezgif.com-video-to-gif (27).gif" style="border:1px solid black; margin:5px;" width="200" height="150">
+  <img src="ezgif.com-video-to-gif (28).gif" style="border:1px solid black; margin:5px;" width="200" height="150">
+  <img src="ezgif.com-video-to-gif (29).gif" style="border:1px solid black; margin:5px;" width="200" height="150">
+  <img src="ezgif.com-video-to-gif (30).gif" style="border:1px solid black; margin:5px;" width="200" height="150">
+  <img src="ezgif.com-video-to-gif (31).gif" style="border:1px solid black; margin:5px;" width="200" height="150">
+  <img src="ezgif.com-video-to-gif (32).gif" style="border:1px solid black; margin:5px;" width="200" height="150">
+  <img src="ezgif.com-video-to-gif (33).gif" style="border:1px solid black; margin:5px;" width="200" height="150">
+  <img src="ezgif.com-video-to-gif (34).gif" style="border:1px solid black; margin:5px;" width="200" height="150">
+  <img src="ezgif.com-video-to-gif (35).gif" style="border:1px solid black; margin:5px;" width="200" height="150">
+  <img src="ezgif.com-video-to-gif (36).gif" style="border:1px solid black; margin:5px;" width="200" height="150">
+</div>
 
 **ㅤ자세한 기능 구현 사항은**
 <a href="files/REST%20API.pdf" target="_blank">api 문서</a>
